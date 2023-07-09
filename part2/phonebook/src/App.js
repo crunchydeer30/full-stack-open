@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+
 import Contacts from './components/Contacts';
 import ContactForm from './components/ContactForm';
 import Heading from './components/Heading';
@@ -14,6 +16,12 @@ const App = () => {
   const contactsToShow = contacts.filter((contact) =>
     contact.name.toLowerCase().includes(filter.toLowerCase())
   );
+
+  useEffect(() => {
+    axios.get('http://localhost:3001/persons').then((response) => {
+      setContacts(response.data);
+    });
+  }, []);
 
   const addContact = (event) => {
     event.preventDefault();
