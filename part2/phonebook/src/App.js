@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import contactService from './services/contacts.js';
 
 import Contacts from './components/Contacts';
 import ContactForm from './components/ContactForm';
-import Heading from './components/Heading';
 import Filter from './components/Filter';
+import Heading from './components/Heading';
 
 const App = () => {
   const [contacts, setContacts] = useState([]);
@@ -13,29 +14,25 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
 
   const [filter, setFilter] = useState('');
-  const contactsToShow = contacts.filter((contact) =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
-  );
+  const contactsToShow = contacts.filter((contact) => {
+    return contact.name.toLowerCase().includes(filter.toLowerCase());
+  });
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons').then((response) => {
-      setContacts(response.data);
-    });
+    contactService
+      .getAll()
+      .then((initialContacts) => setContacts(initialContacts));
   }, []);
 
   const addContact = (event) => {
     event.preventDefault();
 
-    if (!validateInput(newName) || !validateInput(newNumber)) {
-      alert(
-        'Name and number must not be empty and be no longer than 20 characters'
-      );
-      return;
-    }
+    const existingContact = contacts.find(
+      (contact) => contact.name === newName
+    );
 
-    if (contacts.find((contact) => contact.name === newName)) {
-      alert(`${newName} already exists in the phonebook!`);
-      return;
+    if (existingContact) {
+      return updateContact(existingContact);
     }
 
     const newContact = {
@@ -43,13 +40,59 @@ const App = () => {
       number: newNumber,
     };
 
-    setContacts(contacts.concat(newContact));
-    setNewName('');
-    setNewNumber('');
+    contactService
+      .create(newContact)
+      .then((returnedContact) => {
+        setContacts(contacts.concat(returnedContact));
+        setNewName('');
+        setNewNumber('');
+      })
+      .catch((error) => {
+        alert(`Error occured`);
+      });
   };
 
-  const validateInput = (input) => {
-    return input.length > 0 && input.length < 20;
+  const updateContact = (contact) => {
+    const confirmation = window.confirm(
+      `'${contact.name}' already exists, replace old number with a new one?`
+    );
+
+    if (!confirmation) return;
+
+    const id = contact.id;
+    const changedContact = { ...contact, number: newNumber };
+
+    contactService
+      .editNumber(id, changedContact)
+      .then((returnedContact) => {
+        setContacts(
+          contacts.map((contact) =>
+            contact.id !== id ? contact : returnedContact
+          )
+        );
+
+        setNewName('');
+        setNewNumber('');
+      })
+      .catch((error) => {
+        alert(`Error occured`);
+      });
+  };
+
+  const removeContact = (id) => {
+    const removedContact = contacts.find((contact) => contact.id === id);
+
+    const confirmation = window.confirm(`Remove '${removedContact.name}'?`);
+    if (!confirmation) return;
+
+    contactService
+      .remove(id)
+      .then(() => {
+        setContacts(contacts.filter((contact) => contact.id !== id));
+      })
+      .catch((error) => {
+        alert(`Error occured`);
+      });
   };
 
   return (
@@ -70,7 +113,7 @@ const App = () => {
       </section>
       <section>
         <Heading text='Contacts' />
-        <Contacts contacts={contactsToShow} />
+        <Contacts contacts={contactsToShow} removeContact={removeContact} />
       </section>
     </div>
   );

@@ -1,6 +1,6 @@
 import ContactItem from './ContactItem';
 
-const Contacts = ({ contacts }) => {
+const Contacts = ({ contacts, removeContact }) => {
   return (
     <>
       {contacts.length > 0 ? (
@@ -11,6 +11,9 @@ const Contacts = ({ contacts }) => {
                 name={contact.name}
                 number={contact.number}
                 key={contact.name}
+                removeContact={() => {
+                  removeContact(contact.id);
+                }}
               />
             ))}
           </tbody>
