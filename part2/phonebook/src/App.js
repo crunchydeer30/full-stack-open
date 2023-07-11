@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import contactService from './services/contacts.js';
 
@@ -6,12 +5,14 @@ import Contacts from './components/Contacts';
 import ContactForm from './components/ContactForm';
 import Filter from './components/Filter';
 import Heading from './components/Heading';
+import Notification from './components/Notification.js';
 
 const App = () => {
   const [contacts, setContacts] = useState([]);
 
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
+  const [notification, setNotification] = useState(null);
 
   const [filter, setFilter] = useState('');
   const contactsToShow = contacts.filter((contact) => {
@@ -46,9 +47,13 @@ const App = () => {
         setContacts(contacts.concat(returnedContact));
         setNewName('');
         setNewNumber('');
+
+        const message = `Added '${returnedContact.name}'`;
+        showNotification(message, true);
       })
       .catch((error) => {
-        alert(`Error occured`);
+        const message = 'Error';
+        showNotification(message, false);
       });
   };
 
@@ -71,11 +76,16 @@ const App = () => {
           )
         );
 
+        const message = `Updated ${returnedContact.name}`;
+        showNotification(message, true);
         setNewName('');
         setNewNumber('');
       })
       .catch((error) => {
-        alert(`Error occured`);
+        const message = `Information on '${changedContact.name}' has already been 
+                        removed from server`;
+        showNotification(message, false);
+        setContacts(contacts.filter((contact) => contact.id !== id));
       });
   };
 
@@ -89,15 +99,33 @@ const App = () => {
       .remove(id)
       .then(() => {
         setContacts(contacts.filter((contact) => contact.id !== id));
+        const message = `Removed ${removedContact.name}`;
+        showNotification(message, true);
       })
       .catch((error) => {
-        alert(`Error occured`);
+        const message = `Information on '${removedContact.name}' 
+                        has already been removed from server`;
+        showNotification(message, false);
+        setContacts(contacts.filter((contact) => contact.id !== id));
       });
+  };
+
+  const showNotification = (message, success) => {
+    setNotification({
+      text: message,
+      success: success,
+    });
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
   };
 
   return (
     <div>
       <Heading text='Phonebook' />
+      {notification && (
+        <Notification text={notification.text} success={notification.success} />
+      )}
       <section>
         <Filter filter={filter} setFilter={setFilter} />
       </section>
