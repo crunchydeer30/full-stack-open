@@ -1,0 +1,18 @@
+// Valid
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "Test person",
+  "number": "12345"
+}
+
+###
+// Invalid
+
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "Test person"
+}
