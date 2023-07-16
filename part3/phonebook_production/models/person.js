@@ -19,7 +19,7 @@ const personSchema = new mongoose.Schema({
   name: {
     type: String,
     minLength: 3,
-    required: true
+    required: true,
   },
   number: {
     type: String,
@@ -27,11 +27,11 @@ const personSchema = new mongoose.Schema({
     required: true,
 
     validate: {
-      validator: function(v) {
+      validator: function (v) {
         return /^\d{2,3}-\d+$/.test(v);
       },
-      message: `Number is not valid. Number should be formed of two parts that are separated by '-', the first part has two or three numbers and the second part also consists of numbers`
-    }
+      message: 'Number is not valid. Number should be formed of two parts that are separated by '-', the first part has two or three numbers and the second part also consists of numbers',
+    },
   },
 });
 
