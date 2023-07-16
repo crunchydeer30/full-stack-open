@@ -19,11 +19,22 @@ const App = () => {
     return contact.name.toLowerCase().includes(filter.toLowerCase());
   });
 
+
   useEffect(() => {
     contactService
       .getAll()
       .then((initialContacts) => setContacts(initialContacts));
   }, []);
+
+  const showNotification = (message, type) => {
+    setNotification({
+      text: message,
+      type: type,
+    });
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
+  };
 
   const addContact = (event) => {
     event.preventDefault();
@@ -49,11 +60,11 @@ const App = () => {
         setNewNumber('');
 
         const message = `Added '${returnedContact.name}'`;
-        showNotification(message, true);
+        showNotification(message, 'success');
       })
       .catch((error) => {
-        const message = 'Error';
-        showNotification(message, false);
+        const message = error.response.data.error;
+        showNotification(message, 'error');
       });
   };
 
@@ -77,15 +88,22 @@ const App = () => {
         );
 
         const message = `Updated ${returnedContact.name}`;
-        showNotification(message, true);
+        showNotification(message, 'success');
         setNewName('');
         setNewNumber('');
       })
       .catch((error) => {
-        const message = `Information on '${changedContact.name}' has already been 
+        let message;
+        if (error.name === 'TypeError') {
+          message = `Information on '${changedContact.name}' has already been 
                         removed from server`;
-        showNotification(message, false);
-        setContacts(contacts.filter((contact) => contact.id !== id));
+          setContacts(contacts.filter((contact) => contact.id !== id));
+        }
+        else {
+          message = error.response.data.error;
+        }
+        showNotification(message, 'error');
+        
       });
   };
 
@@ -100,31 +118,20 @@ const App = () => {
       .then(() => {
         setContacts(contacts.filter((contact) => contact.id !== id));
         const message = `Removed ${removedContact.name}`;
-        showNotification(message, true);
+        showNotification(message, 'success');
       })
       .catch((error) => {
-        const message = `Information on '${removedContact.name}' 
-                        has already been removed from server`;
-        showNotification(message, false);
+        const message = error.response.data.error;
+        showNotification(message, 'error');
         setContacts(contacts.filter((contact) => contact.id !== id));
       });
-  };
-
-  const showNotification = (message, success) => {
-    setNotification({
-      text: message,
-      success: success,
-    });
-    setTimeout(() => {
-      setNotification(null);
-    }, 5000);
   };
 
   return (
     <div>
       <Heading text='Phonebook' />
       {notification && (
-        <Notification text={notification.text} success={notification.success} />
+        <Notification notification={notification} />
       )}
       <section>
         <Filter filter={filter} setFilter={setFilter} />

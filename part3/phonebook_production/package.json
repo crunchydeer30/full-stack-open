@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build:ui": "@powershell Remove-Item -Recurse -Force build && cd ../phonebook_frontend && npm run build && @powershell Copy-Item build -Recurse ../fso-phonebook-render",
+    "build:ui": "@powershell Remove-Item -Recurse -Force build && cd ../phonebook_frontend && npm run build && @powershell Copy-Item build -Recurse ../phonebook_production",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
   },
   "keywords": [],

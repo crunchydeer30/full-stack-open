@@ -1,5 +1,12 @@
-const Notification = ({ text, success }) => (
-  <div className={success ? 'success' : 'error'}>{text}</div>
-);
+const Notification = ({ notification }) => {
+  return (
+    <div className={notification.type === 'error' 
+                                          ? 'notification error' 
+                                          : 'notification success'}
+    >
+      {notification.text}
+    </div>
+  )
+};
 
 export default Notification;
