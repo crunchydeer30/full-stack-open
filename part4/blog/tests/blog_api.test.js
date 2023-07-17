@@ -24,6 +24,32 @@ test('unique identifier of a blog is id', async () => {
   expect(blogs[0]['id']).toBeDefined();
 });
 
+test('a valid blog can be added', async () => {
+  const newBlog = {
+    author: 'David Chan',
+    url: 'https://seveltepatterns.com/',
+    likes: 12,
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+
+  const blogsNoId = blogsAtEnd.map((blog) => {
+    return {
+      author: blog.author,
+      likes: blog.likes,
+      url: blog.url,
+    };
+  });
+  expect(blogsNoId).toContainEqual(newBlog);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
