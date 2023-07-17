@@ -50,6 +50,29 @@ test('a valid blog can be added', async () => {
   expect(blogsNoId).toContainEqual(newBlog);
 });
 
+test('The likes property default vslue is 0', async () => {
+  const newBlog = {
+    author: 'David Chan',
+    url: 'https://seveltepatterns.com/',
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  const blogsNoId = blogsAtEnd.map((blog) => {
+    return {
+      author: blog.author,
+      likes: blog.likes,
+      url: blog.url,
+    };
+  });
+  expect(blogsNoId).toContainEqual({ ...newBlog, likes: 0 });
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
