@@ -122,11 +122,8 @@ describe('viewing a specific blog', () => {
   });
 
   test('falis with code 404 is id is valid but there is no note with such id', async () => {
-    const blogsAtStart = await helper.blogsInDb();
-    const blogToDelete = blogsAtStart[0];
-    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
-
-    await api.get(`/api/blogs/${blogToDelete.id}`).expect(404);
+    const id = await helper.nonExistingId();
+    await api.get(`/api/blogs/${id}`).expect(404);
   });
 });
 
