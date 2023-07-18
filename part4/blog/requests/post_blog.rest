@@ -1,6 +1,5 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI2NGI2YzZmNjdlZTZkNWUwYmE4NTExMmUiLCJpYXQiOjE2ODk3MDAwOTZ9.1Z3N5e5Oik2I66YC6xnjX-V8oBOtwBJXiDkGb3-e-r8
 
 {
   "title": "Svelte Patterns",
