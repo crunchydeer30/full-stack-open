@@ -34,8 +34,9 @@ blogsRouter.delete('/:id', async (request, response) => {
 blogsRouter.put('/:id', async (request, response) => {
   const body = request.body;
   if (!body.likes) {
-    response.status(400).end();
-    return;
+    return response.status(400).json({
+      error: 'number of likes is not specified',
+    });
   }
 
   const blog = {

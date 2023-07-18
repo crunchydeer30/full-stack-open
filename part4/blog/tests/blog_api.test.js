@@ -177,10 +177,14 @@ describe('updating a blog', () => {
     const blogToUpdate = blogsAtStart[0];
     const { likes, ...updatedInfo } = blogToUpdate;
 
-    await api
+    const response = await api
       .put(`/api/blogs/${blogToUpdate.id}`)
       .send(updatedInfo)
       .expect(400);
+
+    expect(response.body).toEqual({
+      error: 'number of likes is not specified',
+    });
   });
 });
 
