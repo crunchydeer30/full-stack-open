@@ -1,23 +1,19 @@
-const bcrpypt = require('bcrypt');
 const helper = require('./test_helper');
-const supertest = require('supertest');
+const bcrypt = require('bcrypt');
 const User = require('../models/user');
+const supertest = require('supertest');
 
 const app = require('../app');
 const api = supertest(app);
 
 beforeEach(async () => {
   await User.deleteMany({});
-
-  const passwordHash = await bcrpypt.hash('password', 10);
-
-  const user = new User({
-    username: 'initialUser',
-    user: 'initialUser',
-    passwordHash,
-  });
-
-  await user.save();
+  const passwordHash = await bcrypt.hash('password', 10);
+  const users = helper.initialUsers.map(
+    (user) => new User({ ...user, passwordHash })
+  );
+  const promiseArray = users.map((user) => user.save());
+  await Promise.all(promiseArray);
 });
 
 describe('user addition', () => {
