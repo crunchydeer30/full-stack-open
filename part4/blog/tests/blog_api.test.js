@@ -174,6 +174,8 @@ describe('addition of a new blog', () => {
       expect(blogsAtEnd).toHaveLength(blogsAtStart.length + 1);
       expect(userAtEnd.blogs).toHaveLength(userAtStart.blogs.length + 1);
 
+      expect(blogsAtEnd.at(-1).likes).toBe(0);
+
       const titles = blogsAtEnd.map((blog) => blog.title);
       expect(titles).toContain(response.body.title);
     });
