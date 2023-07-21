@@ -10,22 +10,26 @@ const LoginForm = ({
       <h1>Log In to Application</h1>
       <form onSubmit={handleLogin}>
         <div>
-          <label>Username: </label>
+          <label htmlFor="username">Username: </label>
           <input
             type='text'
             name='username'
+            id='username'
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
           />
         </div>
 
         <div>
-          <label>Password: </label>
+          <label htmlFor="password">Password: </label>
           <input
             type='password'
             name='password'
+            id='password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </div>
         <button>Log In</button>
