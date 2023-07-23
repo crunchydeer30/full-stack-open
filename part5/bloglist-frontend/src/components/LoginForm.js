@@ -34,7 +34,7 @@ const LoginForm = ({
             required
           />
         </div>
-        <button>Log In</button>
+        <button id='login-button'>Log In</button>
       </form>
     </section>
   );
