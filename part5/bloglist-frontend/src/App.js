@@ -29,7 +29,7 @@ const App = () => {
       setUsername('');
       setPassword('');
 
-      blogService.setToken(user.token)
+      blogService.setToken(user.token);
 
       const message = 'Succesful Log In';
       showNotification(message, 'success');
@@ -60,15 +60,31 @@ const App = () => {
     }
   };
 
+  const likeBlog = async (blog) => {
+    try {
+      const returnedBlog = await blogService.like(blog);
+      setBlogs((blogs) =>
+        blogs.map((blog) =>
+          blog.id === returnedBlog.id
+            ? { ...blog, likes: blog.likes + 1 }
+            : blog
+        )
+      );
+    } catch (exception) {
+      const message = exception.response.data.error;
+      showNotification(message, 'error');
+    }
+  };
+
   const showNotification = (message, type) => {
     setNotification({
       message,
-      type
+      type,
     });
     setTimeout(() => {
       setNotification(null);
-    }, 5000); 
-  }
+    }, 5000);
+  };
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -110,7 +126,7 @@ const App = () => {
         <BlogForm addBlog={addBlog} />
       </Toggleagble>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} likeBlog={likeBlog} />
       ))}
     </div>
   );
