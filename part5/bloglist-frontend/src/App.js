@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Blog from './components/Blog';
 import blogService from './services/blogs';
 import loginService from './services/login';
+import userService from './services/user';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
@@ -48,6 +49,7 @@ const App = () => {
   const addBlog = async (newBlog) => {
     try {
       const returnedBlog = await blogService.create(newBlog);
+      returnedBlog.user = user;
       setBlogs(blogs.concat(returnedBlog));
 
       const message = `a new blog "${newBlog.title}" by ${newBlog.author} added`;
