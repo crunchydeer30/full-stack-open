@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import Blog from './components/Blog';
 import blogService from './services/blogs';
 import loginService from './services/login';
-import userService from './services/user';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
@@ -15,6 +14,8 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
+
+  const sortedBlogs = blogs.sort((a,b) => b.likes - a.likes);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -125,7 +126,7 @@ const App = () => {
       <Toggleagble buttonLabel='New Blog'>
         <BlogForm addBlog={addBlog} />
       </Toggleagble>
-      {blogs.map((blog) => (
+      {sortedBlogs.map((blog) => (
         <Blog key={blog.id} blog={blog} likeBlog={likeBlog} />
       ))}
     </div>
