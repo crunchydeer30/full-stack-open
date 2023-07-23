@@ -67,7 +67,7 @@ const App = () => {
 
   const likeBlog = async (blog) => {
     try {
-      const returnedBlog = await blogService.like(blog);
+      const returnedBlog = await blogService.update(blog);
       setBlogs((blogs) =>
         blogs.map((blog) =>
           blog.id === returnedBlog.id
@@ -75,11 +75,27 @@ const App = () => {
             : blog
         )
       );
-    } catch (exception) {
+    } catch(exception) {
       const message = exception.response.data.error;
       showNotification(message, 'error');
     }
   };
+
+  const removeBlog = async (blog) => {
+    const confirmation = window.confirm(`Remove "${blog.title}" by ${blog.author}`)
+    if (!confirmation) return;
+
+    try {
+      await blogService.remove(blog.id);
+      setBlogs(blogs.filter(b => b.id !== blog.id))
+      const message = `Blog "${blog.title}" by ${blog.author} was removed`;
+      showNotification(message, 'success');
+    }
+    catch(exception) {
+      const message = exception.response.data.error;
+      showNotification(message, 'error');
+    }
+  }
 
   const showNotification = (message, type) => {
     setNotification({
@@ -131,7 +147,7 @@ const App = () => {
         <BlogForm addBlog={addBlog} />
       </Toggleagble>
       {sortedBlogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} likeBlog={likeBlog} />
+        <Blog key={blog.id} blog={blog} likeBlog={likeBlog} removeBlog={removeBlog} user={user} />
       ))}
     </div>
   );

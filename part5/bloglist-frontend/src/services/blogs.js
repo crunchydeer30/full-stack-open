@@ -20,11 +20,19 @@ const create = async (newObject) => {
   return response.data;
 };
 
-const like = async (updatedObject) => {
+const update = async (updatedObject) => {
   const response = await axios.put(`${baseUrl}/${updatedObject.id}`, updatedObject);
+  return response.data;
+}
+
+const remove = async (id) => {
+  const config = {
+    headers: { Authorization: token },
+  };
+  const response = await axios.delete(`${baseUrl}/${id}`, config);
   return response.data;
 }
 
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, create, setToken, like };
+export default { getAll, create, setToken, update, remove };
