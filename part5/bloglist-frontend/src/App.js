@@ -147,15 +147,17 @@ const App = () => {
       <Toggleagble buttonLabel='New Blog' ref={blogFormRef}>
         <BlogForm addBlog={addBlog} />
       </Toggleagble>
-      {sortedBlogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          likeBlog={likeBlog}
-          removeBlog={removeBlog}
-          user={user}
-        />
-      ))}
+      <section className='bloglist'>
+        {sortedBlogs.map((blog) => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+            likeBlog={likeBlog}
+            removeBlog={removeBlog}
+            user={user}
+          />
+        ))}
+      </section>
     </div>
   );
 };

@@ -63,9 +63,21 @@ describe('Blog app', function () {
 
     describe('and several blogs exist', function () {
       beforeEach(function () {
-        cy.createBlog({ title: 'first blog', author: 'first author', url: 'www.first.com' });
-        cy.createBlog({ title: 'second blog', author: 'second author', url: 'www.second.com' });
-        cy.createBlog({ title: 'third bloge', author: 'third author', url: 'www.third.com' });
+        cy.createBlog({
+          title: 'first blog',
+          author: 'first author',
+          url: 'www.first.com',
+        });
+        cy.createBlog({
+          title: 'second blog',
+          author: 'second author',
+          url: 'www.second.com',
+        });
+        cy.createBlog({
+          title: 'third bloge',
+          author: 'third author',
+          url: 'www.third.com',
+        });
       });
 
       it('one of the blogs can be liked', function () {
@@ -73,6 +85,17 @@ describe('Blog app', function () {
         cy.get('@theBlog').contains('button', 'View').click();
         cy.get('@theBlog').contains('button', 'like').click();
         cy.get('@theBlog').contains('Likes: 1');
+      });
+
+      it('a blog can be deleted by use who created it', function () {
+        cy.contains('second blog').parent().parent().as('theBlog');
+        cy.get('@theBlog').contains('button', 'View').click();
+        cy.get('@theBlog').contains('button', 'Remove').click();
+        cy.get('.bloglist').should('not.contain', 'second blog');
+
+        cy.get('.notification')
+          .should('contain', 'Blog "second blog" by second author was removed')
+          .and('have.css', 'color', 'rgb(0, 128, 0)');
       });
     });
   });
