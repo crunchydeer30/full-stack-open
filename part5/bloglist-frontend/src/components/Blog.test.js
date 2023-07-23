@@ -67,6 +67,4 @@ describe('<Blog />', () => {
 
     expect(likeBlog.mock.calls).toHaveLength(2);
   });
-
-  
 });
