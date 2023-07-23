@@ -42,10 +42,17 @@ describe('<Blog />', () => {
     expect(url).toBe(null);
     const likes = container.querySelector('.likes');
     expect(likes).toBe(null);
-
   });
 
   test('likes and url are shown when the button is clicked', async () => {
+    const user = userEvent.setup();
+    const showButton = screen.getByText('View');
 
+    await user.click(showButton);
+
+    const url = screen.queryByText('test url');
+    expect(url).toBeDefined();
+    const likes = container.querySelector('.likes');
+    expect(likes).toBeDefined();
   });
 });
