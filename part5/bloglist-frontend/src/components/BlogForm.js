@@ -12,14 +12,14 @@ const BlogForm = ({ addBlog }) => {
     const newBlog = {
       title,
       author,
-      url
-    }
+      url,
+    };
 
     addBlog(newBlog);
     setTitle('');
     setAuthor('');
     setUrl('');
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit}>

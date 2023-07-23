@@ -12,7 +12,7 @@ const Toggleagble = forwardRef((props, refs) => {
 
   useImperativeHandle(refs, () => {
     return {
-      toggleVisibilty
+      toggleVisibilty,
     };
   });
 
@@ -28,5 +28,7 @@ const Toggleagble = forwardRef((props, refs) => {
     </>
   );
 });
+
+Toggleagble.displayName = 'Togglable';
 
 export default Toggleagble;
