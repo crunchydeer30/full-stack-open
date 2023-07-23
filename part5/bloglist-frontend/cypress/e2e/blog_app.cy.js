@@ -38,4 +38,57 @@ describe('Blog app', function () {
         .and('have.css', 'color', 'rgb(255, 0, 0)');
     });
   });
+
+  describe('When logged in', function () {
+    beforeEach(function () {
+      cy.request('POST', 'http://localhost:3003/api/login', {
+        username: 'admin',
+        password: 'admin',
+      }).then((response) => {
+        localStorage.setItem('loggedUser', JSON.stringify(response.body));
+        cy.visit('http://localhost:3000');
+      });
+    });
+
+    it('A blog can be created', function () {
+      cy.contains('New Blog').click();
+      cy.get('#title').type('test blog');
+      cy.get('#author').type('tester');
+      cy.get('#url').type('www.test.com');
+
+      cy.get('#create-button').click();
+      cy.get('html').should('contain', 'test blog');
+      cy.get('html').should('contain', 'tester');
+    });
+
+    describe('and several blogs exist', function () {
+      beforeEach(function () {
+        cy.createBlog({ title: 'first blog', author: 'first author', url: 'www.first.com' });
+        cy.createBlog({ title: 'second blog', author: 'second author', url: 'www.second.com' });
+        cy.createBlog({ title: 'third bloge', author: 'third author', url: 'www.third.com' });
+      });
+
+      it('one of the blogs can be liked', function () {
+        cy.contains('second blog').parent().parent().as('theBlog');
+        cy.get('@theBlog').contains('button', 'View').click();
+        cy.get('@theBlog').contains('button', 'like').click();
+        cy.get('@theBlog').contains('Likes: 1');
+      });
+    });
+  });
+});
+
+Cypress.Commands.add('createBlog', ({ title, author, url }) => {
+  cy.request({
+    url: 'http://localhost:3003/api/blogs',
+    method: 'POST',
+    body: { title, author, url },
+    headers: {
+      Authorization: `Bearer ${
+        JSON.parse(localStorage.getItem('loggedUser')).token
+      }`,
+    },
+  });
+
+  cy.visit('http://localhost:3000');
 });

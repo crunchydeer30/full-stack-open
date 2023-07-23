@@ -59,7 +59,7 @@ const BlogForm = ({ addBlog }) => {
           required
         ></input>
       </div>
-      <button>Create</button>
+      <button id='create-button'>Create</button>
     </form>
   );
 };
