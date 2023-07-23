@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const Blog = ({ blog, likeBlog }) => {
+const Blog = ({ blog, likeBlog, user }) => {
   const [open, setOpen] = useState(false);
 
   const blogStyle = {
@@ -33,6 +33,7 @@ const Blog = ({ blog, likeBlog }) => {
           </div>
           <p>Author: {blog.author}</p>
           <p>User: {blog.user.name}</p>
+          <button>Remove</button>
         </div>
       )}
     </div>
