@@ -19,19 +19,21 @@ const Blog = ({ blog, user, likeBlog, removeBlog }) => {
   return (
     <div style={blogStyle}>
       <div>
-        <span>
-          {blog.title} {blog.author}&nbsp;
+        <span className='title'>
+          {blog.title}&nbsp;
+        </span>
+        <span className='author'>
+          {blog.author}
         </span>
         <button onClick={() => setOpen(!open)}>{open ? 'Hide' : 'View'}</button>
       </div>
       {open && (
         <div>
           <a href={blog.url}>{blog.url}</a>
-          <div>
+          <div className='likes'>
             <span>Likes: {blog.likes}&nbsp;</span>
             <button onClick={handleLike}>like</button>
           </div>
-          <p>Author: {blog.author}</p>
           <p>User: {blog.user.name}</p>
           {user.username === blog.user.username && (
             <button onClick={() => removeBlog(blog)}>Remove</button>
