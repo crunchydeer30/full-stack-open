@@ -1,10 +1,16 @@
 describe('Blog app', function () {
   beforeEach(function () {
     cy.request('POST', 'http://localhost:3003/api/testing/reset');
-    const user = {
+    let user = {
       name: 'admin',
       username: 'admin',
       password: 'admin',
+    };
+    cy.request('POST', 'http://localhost:3003/api/users', user);
+    user = {
+      name: 'user',
+      username: 'user',
+      password: 'user',
     };
     cy.request('POST', 'http://localhost:3003/api/users', user);
     cy.visit('http://localhost:3000');
@@ -87,7 +93,7 @@ describe('Blog app', function () {
         cy.get('@theBlog').contains('Likes: 1');
       });
 
-      it('a blog can be deleted by use who created it', function () {
+      it('a blog can be deleted by the user who created it', function () {
         cy.contains('second blog').parent().parent().as('theBlog');
         cy.get('@theBlog').contains('button', 'View').click();
         cy.get('@theBlog').contains('button', 'Remove').click();
@@ -96,6 +102,19 @@ describe('Blog app', function () {
         cy.get('.notification')
           .should('contain', 'Blog "second blog" by second author was removed')
           .and('have.css', 'color', 'rgb(0, 128, 0)');
+      });
+
+      it('remove button is visible only for the user who created the blog', function () {
+        cy.createBlog({
+          title: 'blog created by admin',
+          author: 'admin',
+          url: 'www.admin.com',
+        });
+        cy.contains('button', 'Log Out').click();
+        cy.loginUser({ username: 'user', password: 'user' });
+        cy.contains('blog created by admin').parent().parent().as('theBlog');
+        cy.get('@theBlog').contains('button', 'View').click();
+        cy.get('@theBlog').find('button').should('not.contain', 'Remove');
       });
     });
   });
@@ -114,4 +133,14 @@ Cypress.Commands.add('createBlog', ({ title, author, url }) => {
   });
 
   cy.visit('http://localhost:3000');
+});
+
+Cypress.Commands.add('loginUser', ({ username, password }) => {
+  cy.request('POST', 'http://localhost:3003/api/login', {
+    username,
+    password,
+  }).then((response) => {
+    localStorage.setItem('loggedUser', JSON.stringify(response.body));
+    cy.visit('http://localhost:3000');
+  });
 });
