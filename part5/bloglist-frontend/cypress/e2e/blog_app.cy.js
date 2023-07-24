@@ -67,6 +67,19 @@ describe('Blog app', function () {
       cy.get('html').should('contain', 'tester');
     });
 
+    it('remove button is visible only for the user who created the blog', function () {
+      cy.createBlog({
+        title: 'blog created by admin',
+        author: 'admin',
+        url: 'www.admin.com',
+      });
+      cy.contains('button', 'Log Out').click();
+      cy.loginUser({ username: 'user', password: 'user' });
+      cy.contains('blog created by admin').parent().parent().as('theBlog');
+      cy.get('@theBlog').contains('button', 'View').click();
+      cy.get('@theBlog').find('button').should('not.contain', 'Remove');
+    });
+
     describe('and several blogs exist', function () {
       beforeEach(function () {
         cy.createBlog({
@@ -80,7 +93,7 @@ describe('Blog app', function () {
           url: 'www.second.com',
         });
         cy.createBlog({
-          title: 'third bloge',
+          title: 'third blog',
           author: 'third author',
           url: 'www.third.com',
         });
@@ -93,28 +106,28 @@ describe('Blog app', function () {
         cy.get('@theBlog').contains('Likes: 1');
       });
 
-      it('a blog can be deleted by the user who created it', function () {
+      it('blogs are sorted by the numer of likes', function () {
+        cy.contains('third blog').parent().parent().as('theBlog');
+        cy.get('@theBlog').contains('button', 'View').click();
+        for (let i = 0; i < 3; i++) {
+          cy.get('@theBlog').contains('button', 'like').click();
+        }
+
         cy.contains('second blog').parent().parent().as('theBlog');
         cy.get('@theBlog').contains('button', 'View').click();
-        cy.get('@theBlog').contains('button', 'Remove').click();
-        cy.get('.bloglist').should('not.contain', 'second blog');
+        for (let i = 0; i < 2; i++) {
+          cy.get('@theBlog').contains('button', 'like').click();
+        }
 
-        cy.get('.notification')
-          .should('contain', 'Blog "second blog" by second author was removed')
-          .and('have.css', 'color', 'rgb(0, 128, 0)');
-      });
-
-      it('remove button is visible only for the user who created the blog', function () {
-        cy.createBlog({
-          title: 'blog created by admin',
-          author: 'admin',
-          url: 'www.admin.com',
-        });
-        cy.contains('button', 'Log Out').click();
-        cy.loginUser({ username: 'user', password: 'user' });
-        cy.contains('blog created by admin').parent().parent().as('theBlog');
+        cy.contains('first blog').parent().parent().as('theBlog');
         cy.get('@theBlog').contains('button', 'View').click();
-        cy.get('@theBlog').find('button').should('not.contain', 'Remove');
+        for (let i = 0; i < 5; i++) {
+          cy.get('@theBlog').contains('button', 'like').click();
+        }
+
+        cy.get('.blog').eq(0).should('contain', 'first blog');
+        cy.get('.blog').eq(1).should('contain', 'third blog');
+        cy.get('.blog').eq(2).should('contain', 'second blog');
       });
     });
   });
