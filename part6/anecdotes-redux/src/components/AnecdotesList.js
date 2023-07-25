@@ -14,13 +14,14 @@ const Anecdote = ({ anecdote, handleVote }) => {
 };
 
 const AnecdoteList = () => {
+  const dispatch = useDispatch();
+
   const filter = useSelector((state) => state.filter);
   const anecdotes = useSelector((state) =>
     state.anecdotes
       .filter((a) => a.content.toLowerCase().includes(filter.toLowerCase()))
       .sort((a, b) => b.votes - a.votes)
   );
-  const dispatch = useDispatch();
 
   const handleVote = (id) => {
     dispatch(voteAnecode(id));
