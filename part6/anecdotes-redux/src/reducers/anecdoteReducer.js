@@ -32,7 +32,7 @@ export const createAnecdote = (content) => {
     payload: {
       content,
       id: getId(),
-      votes: 0,
+      votes: 5,
     },
   };
 };
