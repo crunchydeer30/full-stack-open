@@ -15,9 +15,7 @@ const AnecdoteForm = () => {
     if (!anecdote) return;
     event.preventDefault();
     try {
-      const newAnecdote = await anecdoteService.createNew(anecdote);
-      console.log(newAnecdote);
-      dispatch(createAnecdote(newAnecdote));
+      dispatch(createAnecdote(anecdote));
       setAnecdote('');
       dispatch(setNotification(`Created an anecdote: "${anecdote}"`));
       setTimeout(() => {
