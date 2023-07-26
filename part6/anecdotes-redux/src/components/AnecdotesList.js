@@ -5,6 +5,21 @@ import {
   hideNotification,
 } from '../reducers/notificationReducer';
 
+const AnecdoteList = () => {
+  const filter = useSelector((state) => state.filter);
+  const anecdotes = useSelector((state) => state.anecdotes)
+    .filter((a) => a.content.toLowerCase().includes(filter.toLowerCase()))
+    .sort((a, b) => b.votes - a.votes);
+
+  return (
+    <div>
+      {anecdotes.map((anecdote) => (
+        <Anecdote key={anecdote.id} anecdote={anecdote} />
+      ))}
+    </div>
+  );
+};
+
 const Anecdote = ({ anecdote }) => {
   const dispatch = useDispatch();
 
@@ -30,21 +45,6 @@ const Anecdote = ({ anecdote }) => {
         has {anecdote.votes}
         <button onClick={handleVote}>vote</button>
       </div>
-    </div>
-  );
-};
-
-const AnecdoteList = () => {
-  const filter = useSelector((state) => state.filter);
-  const anecdotes = useSelector((state) => state.anecdotes)
-    .filter((a) => a.content.toLowerCase().includes(filter.toLowerCase()))
-    .sort((a, b) => b.votes - a.votes);
-
-  return (
-    <div>
-      {anecdotes.map((anecdote) => (
-        <Anecdote key={anecdote.id} anecdote={anecdote} />
-      ))}
     </div>
   );
 };
