@@ -1,9 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { voteAnecode } from '../reducers/anecdoteReducer';
-import {
-  setNotification,
-  hideNotification,
-} from '../reducers/notificationReducer';
+import { setNotification } from '../reducers/notificationReducer';
 
 const AnecdoteList = () => {
   const filter = useSelector((state) => state.filter);
@@ -26,15 +23,9 @@ const Anecdote = ({ anecdote }) => {
   const handleVote = () => {
     try {
       dispatch(voteAnecode(anecdote));
-      dispatch(setNotification(`You voted for "${anecdote.content}"`));
-      setTimeout(() => {
-        dispatch(hideNotification());
-      }, 5000);
+      dispatch(setNotification(`You voted for "${anecdote.content}"`, 5));
     } catch (exception) {
-      dispatch(setNotification(exception));
-      setTimeout(() => {
-        dispatch(hideNotification());
-      }, 5000);
+      dispatch(setNotification(exception, 5));
     }
   };
 

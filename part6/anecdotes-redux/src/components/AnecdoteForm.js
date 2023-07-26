@@ -1,9 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { createAnecdote } from '../reducers/anecdoteReducer';
-import {
-  setNotification,
-  hideNotification,
-} from '../reducers/notificationReducer';
+import { setNotification } from '../reducers/notificationReducer';
 import { useState } from 'react';
 
 const AnecdoteForm = () => {
@@ -16,15 +13,9 @@ const AnecdoteForm = () => {
     try {
       dispatch(createAnecdote(anecdote));
       setAnecdote('');
-      dispatch(setNotification(`Created an anecdote: "${anecdote}"`));
-      setTimeout(() => {
-        dispatch(hideNotification());
-      }, 5000);
+      dispatch(setNotification(`Created an anecdote: "${anecdote}"`, 5));
     } catch (exception) {
-      dispatch(setNotification(exception));
-      setTimeout(() => {
-        dispatch(hideNotification());
-      }, 5000);
+      dispatch(setNotification(exception, 5));
     }
   };
 
