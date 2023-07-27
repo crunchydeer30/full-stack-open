@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, useMatch } from 'react-router-dom';
 import CreateNew from './components/CreateNew';
 import AnecdoteList from './components/AnecdoteList';
 import About from './components/About';
 import Menu from './components/Menu';
-
+import Anecdote from './components/Anecdote';
 
 const Footer = () => (
   <div>
@@ -35,6 +35,11 @@ const App = () => {
     },
   ]);
 
+  const match = useMatch('/anecdotes/:id');
+  const anecdote = match
+    ? anecdotes.find((a) => a.id === +match.params.id)
+    : null;
+
   const [notification, setNotification] = useState('');
 
   const addNew = (anecdote) => {
@@ -56,16 +61,20 @@ const App = () => {
   };
 
   return (
-    <Router>
+    <section>
       <h1>Software anecdotes</h1>
       <Menu />
       <Routes>
+        <Route
+          path='/anecdotes/:id'
+          element={<Anecdote anecdote={anecdote} />}
+        />
         <Route path='/' element={<AnecdoteList anecdotes={anecdotes} />} />
         <Route path='/create' element={<CreateNew addNew={addNew} />} />
         <Route path='/about' element={<About />} />
-      </Routes>  
+      </Routes>
       <Footer />
-    </Router>
+    </section>
   );
 };
 
