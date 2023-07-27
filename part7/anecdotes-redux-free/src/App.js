@@ -5,6 +5,7 @@ import AnecdoteList from './components/AnecdoteList';
 import About from './components/About';
 import Menu from './components/Menu';
 import Anecdote from './components/Anecdote';
+import Notification from './components/Notification';
 
 const Footer = () => (
   <div>
@@ -47,6 +48,13 @@ const App = () => {
     setAnecdotes(anecdotes.concat(anecdote));
   };
 
+  const showNotification = (text) => {
+    setNotification(text);
+    setTimeout(() => {
+      setNotification('');
+    }, 5000);
+  };
+
   const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
 
   const vote = (id) => {
@@ -64,13 +72,19 @@ const App = () => {
     <section>
       <h1>Software anecdotes</h1>
       <Menu />
+      <Notification notification={notification}/>
       <Routes>
         <Route
           path='/anecdotes/:id'
           element={<Anecdote anecdote={anecdote} />}
         />
         <Route path='/' element={<AnecdoteList anecdotes={anecdotes} />} />
-        <Route path='/create' element={<CreateNew addNew={addNew} />} />
+        <Route
+          path='/create'
+          element={
+            <CreateNew addNew={addNew} showNotification={showNotification} />
+          }
+        />
         <Route path='/about' element={<About />} />
       </Routes>
       <Footer />
