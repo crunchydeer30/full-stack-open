@@ -11,6 +11,12 @@ usersRouter.get('/', async (request, response) => {
   response.json(users);
 });
 
+usersRouter.get('/:id', async (request, response) => {
+  const user = await User.findById(request.params.id);
+  if (user) response.json(user);
+  else response.status(404).json({ error: 'user does not exist' });
+});
+
 usersRouter.post('/', async (request, response) => {
   const { username, name, password } = request.body;
 
