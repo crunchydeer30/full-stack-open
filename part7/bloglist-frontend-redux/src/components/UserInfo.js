@@ -12,7 +12,7 @@ const UserInfo = () => {
     <section>
       <h1>{user.username}</h1>
       <h2>Added Blogs</h2>
-      {blogs ? (
+      {blogs.length ? (
         <ul>
           {blogs.map((blog) => (
             <li key={blog.id}>{blog.title}</li>
