@@ -15,6 +15,7 @@ import Toggleagble from './components/Toggleable';
 import LogoutButton from './components/LogoutButton';
 import Users from './components/UserList';
 import UserInfo from './components/UserInfo';
+import BlogInfo from './components/BlogInfo';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -53,6 +54,7 @@ const App = () => {
       <Routes>
         <Route path='/users' element={<Users />} />
         <Route path='/users/:id' element={<UserInfo />} />
+        <Route path='/blogs/:id' element={<BlogInfo />} />
       </Routes>
       <h1>Blogs</h1>
       <div>
