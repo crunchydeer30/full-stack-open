@@ -9,7 +9,7 @@ const Blog = ({ blog }) => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
 
-  const user = useSelector((state) => state.users);
+  const user = useSelector((state) => state.loggedUser);
 
   const blogStyle = {
     paddingTop: 10,
