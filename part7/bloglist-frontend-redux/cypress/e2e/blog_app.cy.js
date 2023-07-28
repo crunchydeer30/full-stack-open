@@ -106,7 +106,7 @@ describe('Blog app', function () {
         cy.get('@theBlog').contains('Likes: 1');
       });
 
-      it('blogs are sorted by the numer of likes', function () {
+      it.only('blogs are sorted by the numer of likes', function () {
         cy.contains('third blog').parent().parent().as('theBlog');
         cy.get('@theBlog').contains('button', 'View').click();
         for (let i = 0; i < 3; i++) {
@@ -119,10 +119,10 @@ describe('Blog app', function () {
           cy.get('@theBlog').contains('button', 'like').click();
         }
 
-        cy.contains('first blog').parent().parent().as('theBlog');
-        cy.get('@theBlog').contains('button', 'View').click();
+        cy.contains('first blog').parent().parent().as('fb');
+        cy.get('@fb').contains('button', 'View').click();
         for (let i = 0; i < 5; i++) {
-          cy.get('@theBlog').contains('button', 'like').click();
+          cy.get('@fb').contains('button', 'like').click();
         }
 
         cy.get('.blog').eq(0).should('contain', 'first blog');
