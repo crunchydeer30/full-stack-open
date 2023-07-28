@@ -1,8 +1,11 @@
 const blogsRouter = require('express').Router();
 const Blog = require('../models/blog');
+const Comment = require('../models/comment');
 
 blogsRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 });
+  const blogs = await Blog.find({})
+    .populate('user', { username: 1, name: 1 })
+    .populate('comments', { content: 1, date: 1 });
   response.json(blogs);
 });
 
@@ -29,9 +32,39 @@ blogsRouter.post('/', async (request, response) => {
 });
 
 blogsRouter.get('/:id', async (request, response) => {
-  const blog = await Blog.findById(request.params.id);
+  const blog = await Blog.findById(request.params.id)
+    .populate('user', { username: 1, name: 1 })
+    .populate('comments', { content: 1, date: 1 });
   if (blog) response.json(blog);
   else response.status(404).json({ error: 'blog does not exist' });
+});
+
+blogsRouter.get('/:id/comments', async (request, response) => {
+  const blog = await Blog.findById(request.params.id);
+  if (blog) response.json(blog.comments);
+  else response.status(404).json({ error: 'blog does not exist' });
+});
+
+blogsRouter.post('/:id/comments', async (request, response) => {
+  const blog = await Blog.findById(request.params.id);
+  if (!blog) response.status(404).json({ error: 'blog does not exist' });
+
+  const user = request.user;
+  if (!user)
+    return response.status(401).json({ error: 'authentication required' });
+
+  const body = request.body;
+
+  const comment = new Comment({
+    content: body.content,
+    blog: blog.id,
+  });
+
+  const savedComment = await comment.save();
+  blog.comments = blog.comments.concat(savedComment._id);
+  await blog.save();
+
+  response.status(201).json(savedComment);
 });
 
 blogsRouter.delete('/:id', async (request, response) => {

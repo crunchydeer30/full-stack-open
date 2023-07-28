@@ -15,6 +15,13 @@ export const createBlog = (blog) => {
   };
 };
 
+export const createComment = (comment, id) => {
+  return async (dispatch) => {
+    const newComment = await blogService.createComment(comment, id);
+    dispatch(addComment(newComment));
+  };
+};
+
 export const likeBlog = (blog) => {
   return async (dispatch) => {
     const updatedBlog = await blogService.update({
@@ -53,8 +60,16 @@ const blogSlice = createSlice({
       const id = action.payload;
       return state.filter((blog) => blog.id !== id);
     },
+    addComment(state, action) {
+      const newComment = action.payload;
+      return state.map((b) =>
+        b.id === newComment.blog
+          ? { ...b, comments: b.comments.concat(newComment) }
+          : b
+      );
+    },
   },
 });
 
-export const { set, update, create, remove } = blogSlice.actions;
+export const { set, update, create, remove, addComment } = blogSlice.actions;
 export default blogSlice.reducer;
