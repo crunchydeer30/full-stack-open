@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { likeBlog } from '../reducers/blogReducer';
+import { removeBlog } from '../reducers/blogReducer';
+import { setNotification } from '../reducers/notificationReducer';
 
-const Blog = ({ blog, user, removeBlog }) => {
+const Blog = ({ blog, user }) => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
 
@@ -15,7 +17,21 @@ const Blog = ({ blog, user, removeBlog }) => {
   };
 
   const handleLike = () => {
-    dispatch(likeBlog({ ...blog, user: blog.user.id }));
+    try {
+      dispatch(likeBlog({ ...blog, user: blog.user.id }));
+      dispatch(setNotification(`Voted for "${blog.title}"`, 'success', 5));
+    } catch (error) {
+      dispatch(setNotification(error.message, 'error', 5));
+    }
+  };
+
+  const handleRemove = () => {
+    try {
+      dispatch(removeBlog(blog.id));
+      dispatch(setNotification(`Removed "${blog.title}"`, 'success', 5));
+    } catch (error) {
+      dispatch(setNotification(error.message, 'error', 5));
+    }
   };
 
   return (
@@ -34,10 +50,10 @@ const Blog = ({ blog, user, removeBlog }) => {
               like
             </button>
           </div>
-          {/* <p>User: {blog.user.username}</p> */}
-          {/* {user.username === blog.user.username && (
-            <button onClick={() => removeBlog(blog)}>Remove</button>
-          )} */}
+          <p>User: {blog.user.username}</p>
+          {user.username === blog.user.username && (
+            <button onClick={handleRemove}>Remove</button>
+          )}
         </div>
       )}
     </div>

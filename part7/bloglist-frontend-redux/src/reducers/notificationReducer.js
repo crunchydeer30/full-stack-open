@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-export const setNotification = (notification, type, timer) => {
+export const setNotification = (notification, type, timer = 5) => {
   return async (dispatch) => {
     dispatch(set({ message: notification, type }));
     setTimeout(() => {

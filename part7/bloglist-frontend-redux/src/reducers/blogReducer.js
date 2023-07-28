@@ -25,6 +25,13 @@ export const likeBlog = (blog) => {
   };
 };
 
+export const removeBlog = (id) => {
+  return async (dispatch) => {
+    await blogService.remove(id);
+    dispatch(remove(id));
+  };
+};
+
 const blogSlice = createSlice({
   name: 'blogs',
   initialState: [],
@@ -42,8 +49,12 @@ const blogSlice = createSlice({
       const newBlog = action.payload;
       return [...state, newBlog];
     },
+    remove(state, action) {
+      const id = action.payload;
+      return state.filter((blog) => blog.id !== id);
+    },
   },
 });
 
-export const { set, update, create } = blogSlice.actions;
+export const { set, update, create, remove } = blogSlice.actions;
 export default blogSlice.reducer;

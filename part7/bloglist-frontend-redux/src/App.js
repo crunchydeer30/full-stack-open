@@ -41,10 +41,8 @@ const App = () => {
       blogService.setToken(user.token);
 
       const message = 'Succesful Log In';
-      showNotification(message, 'success');
     } catch (exception) {
       const message = 'Wrong usename or password';
-      showNotification(message, 'error');
     }
   };
 
@@ -52,34 +50,6 @@ const App = () => {
     setUser(null);
     window.localStorage.removeItem('loggedUser');
     const message = 'Logged Out';
-    showNotification(message, 'success');
-  };
-
-  const removeBlog = async (blog) => {
-    const confirmation = window.confirm(
-      `Remove "${blog.title}" by ${blog.author}`
-    );
-    if (!confirmation) return;
-
-    try {
-      await blogService.remove(blog.id);
-      // setBlogs(blogs.filter((b) => b.id !== blog.id));
-      const message = `Blog "${blog.title}" by ${blog.author} was removed`;
-      showNotification(message, 'success');
-    } catch (exception) {
-      const message = exception.response.data.error;
-      showNotification(message, 'error');
-    }
-  };
-
-  const showNotification = (message, type) => {
-    setNotification({
-      message,
-      type,
-    });
-    setTimeout(() => {
-      setNotification(null);
-    }, 5000);
   };
 
   useEffect(() => {
@@ -117,7 +87,7 @@ const App = () => {
       <Toggleagble buttonLabel='New Blog' ref={blogFormRef}>
         <BlogForm />
       </Toggleagble>
-      <BlogList />
+      <BlogList user={user} />
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import Blog from './Blog';
 import { useSelector } from 'react-redux';
 
-const BlogList = () => {
+const BlogList = ({ user }) => {
   const blogs = useSelector((state) => state.blogs);
   const blogsToShow = blogs.slice(0).sort((a, b) => b.likes - a.likes);
 
@@ -13,7 +13,7 @@ const BlogList = () => {
           blog={blog}
           // // likeBlog={likeBlog}
           // // removeBlog={removeBlog}
-          // // user={user}
+          user={user}
         />
       ))}
     </section>
