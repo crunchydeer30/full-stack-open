@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJpZCI6IjY0YjZkNmZjZGViN2ZjZTdiMGQzYzQ4NyIsImlhdCI6MTY4OTcwNDIxMn0.SyCSoaM0GCEIQUvVXB7WO5oJo3attO93UZ29sQamwnI
+
+{
+  "title": "Blog to be deleted",
+  "author": "Rich Harris",
+  "url": "https://www.svelte.com",
+  "likes": 12
+}
