@@ -4,24 +4,24 @@ import blogService from '../services/blogs';
 export const initializeBlogs = () => {
   return async (dispatch) => {
     const blogs = await blogService.getAll();
-    dispatch(setBlogs(blogs));
+    dispatch(set(blogs));
   };
 };
 
 export const createBlog = (blog) => {
   return async (dispatch) => {
     const newBlog = await blogService.create(blog);
-    dispatch(addBlog(newBlog));
+    dispatch(create(newBlog));
   };
 };
 
 export const likeBlog = (blog) => {
   return async (dispatch) => {
-    const newBlog = await blogService.update({
+    const updatedBlog = await blogService.update({
       ...blog,
       likes: blog.likes + 1,
     });
-    dispatch(updateBlog(newBlog));
+    dispatch(update(updatedBlog));
   };
 };
 
@@ -29,21 +29,21 @@ const blogSlice = createSlice({
   name: 'blogs',
   initialState: [],
   reducers: {
-    setBlogs(state, action) {
+    set(state, action) {
       return action.payload;
     },
-    updateBlog(state, action) {
+    update(state, action) {
       const updatedBlog = action.payload;
       return state.map((blog) =>
         blog.id === updatedBlog.id ? updatedBlog : blog
       );
     },
-    addBlog(state, action) {
+    create(state, action) {
       const newBlog = action.payload;
       return [...state, newBlog];
     },
   },
 });
 
-export const { setBlogs, updateBlog, addBlog } = blogSlice.actions;
+export const { set, update, create } = blogSlice.actions;
 export default blogSlice.reducer;

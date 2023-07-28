@@ -55,21 +55,6 @@ const App = () => {
     showNotification(message, 'success');
   };
 
-  const addBlog = async (newBlog) => {
-    try {
-      const returnedBlog = await blogService.create(newBlog);
-      blogFormRef.current.toggleVisibilty();
-
-      returnedBlog.user = user;
-
-      const message = `a new blog "${newBlog.title}" by ${newBlog.author} added`;
-      showNotification(message, 'success');
-    } catch (exception) {
-      const message = exception.response.data.error;
-      showNotification(message, 'error');
-    }
-  };
-
   const removeBlog = async (blog) => {
     const confirmation = window.confirm(
       `Remove "${blog.title}" by ${blog.author}`
@@ -109,7 +94,7 @@ const App = () => {
   if (!user) {
     return (
       <>
-        {notification && <Notification notification={notification} />}
+        <Notification />
         <LoginForm
           username={username}
           setUsername={setUsername}
@@ -123,14 +108,14 @@ const App = () => {
 
   return (
     <div>
-      {notification && <Notification notification={notification} />}
+      <Notification />
       <h1>Blogs</h1>
       <div>
         <span>{user.username} logged in&nbsp;</span>
         <button onClick={() => handleLogout()}>Log Out</button>
       </div>
       <Toggleagble buttonLabel='New Blog' ref={blogFormRef}>
-        <BlogForm addBlog={addBlog} />
+        <BlogForm />
       </Toggleagble>
       <BlogList />
     </div>

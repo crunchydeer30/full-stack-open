@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { createBlog } from '../reducers/blogReducer';
+import { setNotification } from '../reducers/notificationReducer';
 
 const BlogForm = () => {
   const dispatch = useDispatch();
@@ -19,10 +20,18 @@ const BlogForm = () => {
       url,
     };
 
-    dispatch(createBlog(newBlog));
-    setTitle('');
-    setAuthor('');
-    setUrl('');
+    try {
+      dispatch(createBlog(newBlog));
+      dispatch(
+        setNotification(`Blog ${newBlog.title} has been created`, 'success', 5)
+      );
+
+      setTitle('');
+      setAuthor('');
+      setUrl('');
+    } catch (error) {
+      dispatch(setNotification(error.message, 'error', 5));
+    }
   };
 
   return (
