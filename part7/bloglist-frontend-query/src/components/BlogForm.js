@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
-import { useSetNotification } from '../NotificationContext';
+import { useSetNotification } from '../context/NotificationContext';
 import blogService from '../services/blogs';
 
 const BlogForm = () => {

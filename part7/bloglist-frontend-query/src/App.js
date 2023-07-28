@@ -1,20 +1,19 @@
-import { useState, useEffect, useRef } from 'react';
-import { useSetNotification } from './NotificationContext';
+import { useState, useEffect, useRef, useContext } from 'react';
+import { useSetNotification } from './context/NotificationContext';
 import blogService from './services/blogs';
-import loginService from './services/login';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
 import Toggleagble from './components/Toggleable';
 import BlogList from './components/BlogList';
+import { useSetUser } from './context/UserContext';
+import UserContext from './context/UserContext';
 
 const App = () => {
-  const setBlogs = null;
   const setNotification = useSetNotification();
-
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [user, setUser] = useState(null);
+  const user = useContext(UserContext)[0];
+  const setUser = useSetUser();
+  console.log(user);
 
   const blogFormRef = useRef();
 
@@ -27,47 +26,9 @@ const App = () => {
     }
   }, []);
 
-  // const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes);
-
-  const handleLogin = async (event) => {
-    event.preventDefault();
-    try {
-      const user = await loginService.login({
-        username,
-        password,
-      });
-      window.localStorage.setItem('loggedUser', JSON.stringify(user));
-      setNotification('Logged In', 'success');
-      setUser(user);
-      setUsername('');
-      setPassword('');
-
-      blogService.setToken(user.token);
-    } catch (exception) {
-      const message = 'Wrong usename or password';
-      setNotification(message, 'error');
-    }
-  };
-
   const handleLogout = async () => {
     setUser(null);
     window.localStorage.removeItem('loggedUser');
-  };
-
-  const likeBlog = async (blog) => {
-    try {
-      const returnedBlog = await blogService.update(blog);
-      setBlogs((blogs) =>
-        blogs.map((blog) =>
-          blog.id === returnedBlog.id
-            ? { ...blog, likes: blog.likes + 1 }
-            : blog
-        )
-      );
-    } catch (exception) {
-      const message = exception.response.data.error;
-      showNotification(message, 'error');
-    }
   };
 
   const removeBlog = async (blog) => {
@@ -101,13 +62,7 @@ const App = () => {
     return (
       <>
         <Notification />
-        <LoginForm
-          username={username}
-          setUsername={setUsername}
-          password={password}
-          setPassword={setPassword}
-          handleLogin={handleLogin}
-        />
+        <LoginForm />
       </>
     );
   }

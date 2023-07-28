@@ -1,12 +1,36 @@
-import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { useMutation } from 'react-query';
+import { useSetNotification } from '../context/NotificationContext';
+import { useSetUser } from '../context/UserContext';
+import loginService from '../services/login';
+import blogService from '../services/blogs';
 
-const LoginForm = ({
-  username,
-  setUsername,
-  password,
-  setPassword,
-  handleLogin,
-}) => {
+const LoginForm = () => {
+  const setNotification = useSetNotification();
+  const setUser = useSetUser();
+
+  const loginMutation = useMutation(loginService.login, {
+    onSuccess: (loggedUser) => {
+      window.localStorage.setItem('loggedUser', JSON.stringify(loggedUser));
+      setNotification('Logged In', 'success');
+      setUser(loggedUser);
+      blogService.setToken(loggedUser.token);
+      setUsername('');
+      setPassword('');
+    },
+    onError: () => {
+      setNotification('Wrong username or password', 'error');
+    },
+  });
+
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    loginMutation.mutate({ username, password });
+  };
+
   return (
     <section>
       <h1>Log In to Application</h1>
@@ -38,14 +62,6 @@ const LoginForm = ({
       </form>
     </section>
   );
-};
-
-LoginForm.propTypes = {
-  username: PropTypes.string.isRequired,
-  setUsername: PropTypes.func.isRequired,
-  password: PropTypes.string.isRequired,
-  setPassword: PropTypes.func.isRequired,
-  handleLogin: PropTypes.func.isRequired,
 };
 
 export default LoginForm;
