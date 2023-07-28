@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import { useSetNotification } from './NotificationContext';
+import { useQuery } from 'react-query';
 import Blog from './components/Blog';
 import blogService from './services/blogs';
 import loginService from './services/login';
@@ -6,10 +8,11 @@ import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
 import Toggleagble from './components/Toggleable';
+import axios from 'axios';
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [notification, setNotification] = useState(null);
+  const setBlogs = null;
+  const setNotification = useSetNotification();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -17,7 +20,24 @@ const App = () => {
 
   const blogFormRef = useRef();
 
-  const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes);
+  const result = useQuery(
+    'blogs',
+    () => {
+      axios
+        .get('http://localhost:3003/api/blogs')
+        .then((response) => response.data);
+    },
+    { refetchOnWindowFocus: false }
+  );
+  console.log(result);
+
+  if (result.isLoading) {
+    return <div>loading data...</div>;
+  }
+
+  const blogs = result.data;
+
+  // const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -27,26 +47,21 @@ const App = () => {
         password,
       });
       window.localStorage.setItem('loggedUser', JSON.stringify(user));
-
+      setNotification('Logged In', 'success');
       setUser(user);
       setUsername('');
       setPassword('');
 
       blogService.setToken(user.token);
-
-      const message = 'Succesful Log In';
-      showNotification(message, 'success');
     } catch (exception) {
       const message = 'Wrong usename or password';
-      showNotification(message, 'error');
+      setNotification(message, 'error');
     }
   };
 
   const handleLogout = async () => {
     setUser(null);
     window.localStorage.removeItem('loggedUser');
-    const message = 'Logged Out';
-    showNotification(message, 'success');
   };
 
   const addBlog = async (newBlog) => {
@@ -108,23 +123,10 @@ const App = () => {
     }, 5000);
   };
 
-  useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
-
-  useEffect(() => {
-    const loggedUser = window.localStorage.getItem('loggedUser');
-    if (loggedUser) {
-      const user = JSON.parse(loggedUser);
-      setUser(user);
-      blogService.setToken(user.token);
-    }
-  }, []);
-
   if (!user) {
     return (
       <>
-        {notification && <Notification notification={notification} />}
+        <Notification />
         <LoginForm
           username={username}
           setUsername={setUsername}
@@ -138,7 +140,7 @@ const App = () => {
 
   return (
     <div>
-      {notification && <Notification notification={notification} />}
+      <Notification />
       <h1>Blogs</h1>
       <div>
         <span>{user.username} logged in&nbsp;</span>
@@ -147,8 +149,8 @@ const App = () => {
       <Toggleagble buttonLabel='New Blog' ref={blogFormRef}>
         <BlogForm addBlog={addBlog} />
       </Toggleagble>
-      <section className='bloglist'>
-        {sortedBlogs.map((blog) => (
+      {/* <section className='bloglist'>
+        {blogs.map((blog) => (
           <Blog
             key={blog.id}
             blog={blog}
@@ -157,7 +159,7 @@ const App = () => {
             user={user}
           />
         ))}
-      </section>
+      </section> */}
     </div>
   );
 };
