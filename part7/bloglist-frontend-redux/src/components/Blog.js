@@ -1,12 +1,15 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { likeBlog } from '../reducers/blogReducer';
 import { removeBlog } from '../reducers/blogReducer';
 import { setNotification } from '../reducers/notificationReducer';
 
-const Blog = ({ blog, user }) => {
+const Blog = ({ blog }) => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
+
+  const user = useSelector((state) => state.users);
 
   const blogStyle = {
     paddingTop: 10,
