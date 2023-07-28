@@ -1,14 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSetNotification } from './NotificationContext';
-import { useQuery } from 'react-query';
-import Blog from './components/Blog';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
 import Toggleagble from './components/Toggleable';
-import axios from 'axios';
+import BlogList from './components/BlogList';
 
 const App = () => {
   const setBlogs = null;
@@ -20,22 +18,14 @@ const App = () => {
 
   const blogFormRef = useRef();
 
-  const result = useQuery(
-    'blogs',
-    () => {
-      axios
-        .get('http://localhost:3003/api/blogs')
-        .then((response) => response.data);
-    },
-    { refetchOnWindowFocus: false }
-  );
-  console.log(result);
-
-  if (result.isLoading) {
-    return <div>loading data...</div>;
-  }
-
-  const blogs = result.data;
+  useEffect(() => {
+    const loggedUser = window.localStorage.getItem('loggedUser');
+    if (loggedUser) {
+      const user = JSON.parse(loggedUser);
+      setUser(user);
+      blogService.setToken(user.token);
+    }
+  }, []);
 
   // const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes);
 
@@ -64,22 +54,6 @@ const App = () => {
     window.localStorage.removeItem('loggedUser');
   };
 
-  const addBlog = async (newBlog) => {
-    try {
-      const returnedBlog = await blogService.create(newBlog);
-      blogFormRef.current.toggleVisibilty();
-
-      returnedBlog.user = user;
-      setBlogs(blogs.concat(returnedBlog));
-
-      const message = `a new blog "${newBlog.title}" by ${newBlog.author} added`;
-      showNotification(message, 'success');
-    } catch (exception) {
-      const message = exception.response.data.error;
-      showNotification(message, 'error');
-    }
-  };
-
   const likeBlog = async (blog) => {
     try {
       const returnedBlog = await blogService.update(blog);
@@ -104,7 +78,7 @@ const App = () => {
 
     try {
       await blogService.remove(blog.id);
-      setBlogs(blogs.filter((b) => b.id !== blog.id));
+      // setBlogs(blogs.filter((b) => b.id !== blog.id));
       const message = `Blog "${blog.title}" by ${blog.author} was removed`;
       showNotification(message, 'success');
     } catch (exception) {
@@ -147,19 +121,9 @@ const App = () => {
         <button onClick={() => handleLogout()}>Log Out</button>
       </div>
       <Toggleagble buttonLabel='New Blog' ref={blogFormRef}>
-        <BlogForm addBlog={addBlog} />
+        <BlogForm />
       </Toggleagble>
-      {/* <section className='bloglist'>
-        {blogs.map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            likeBlog={likeBlog}
-            removeBlog={removeBlog}
-            user={user}
-          />
-        ))}
-      </section> */}
+      <BlogList />
     </div>
   );
 };

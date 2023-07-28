@@ -1,6 +1,23 @@
 import { useState } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
+import { useSetNotification } from '../NotificationContext';
+import blogService from '../services/blogs';
 
-const BlogForm = ({ addBlog }) => {
+const BlogForm = () => {
+  const queryClient = useQueryClient();
+  const setNotification = useSetNotification();
+
+  const blogMutation = useMutation(blogService.create, {
+    onSuccess: (blog) => {
+      queryClient.invalidateQueries('blogs');
+      console.log(blog);
+      setNotification(`Blog ${blog.title} has been created`, 'success');
+    },
+    onError: (error) => {
+      setNotification(error.message, 'error');
+    },
+  });
+
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
@@ -14,8 +31,7 @@ const BlogForm = ({ addBlog }) => {
       author,
       url,
     };
-
-    addBlog(newBlog);
+    blogMutation.mutate(newBlog);
     setTitle('');
     setAuthor('');
     setUrl('');
