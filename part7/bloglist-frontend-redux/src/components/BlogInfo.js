@@ -4,6 +4,7 @@ import { likeBlog } from '../reducers/blogReducer';
 import { setNotification } from '../reducers/notificationReducer';
 import CommentForm from './CommentForm';
 import { Button, Container } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 const BlogInfo = () => {
   const id = useParams().id;
@@ -17,7 +18,7 @@ const BlogInfo = () => {
   const handleLike = () => {
     try {
       dispatch(likeBlog({ ...blog, user: blog.user.id }));
-      dispatch(setNotification(`Liked for "${blog.title}"`, 'success', 5));
+      dispatch(setNotification(`Liked "${blog.title}"`, 'success', 5));
     } catch (error) {
       dispatch(setNotification(error.message, 'error', 5));
     }
@@ -34,7 +35,10 @@ const BlogInfo = () => {
             like
           </Button>
         </div>
-        <p>Added by {blog.user.username}</p>
+        <p>
+          Added by{' '}
+          <Link to={`/users/${blog.user.id}`}>{blog.user.username}</Link>
+        </p>
       </section>
       <section>
         <h3>Comments</h3>

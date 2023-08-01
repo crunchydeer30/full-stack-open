@@ -50,7 +50,10 @@ const Blog = ({ blog }) => {
           URL: <a href={blog.url}>{blog.url}</a>
         </Card.Text>
         <Card.Text>Author: {blog.author}</Card.Text>
-        <Card.Text>Added by: {blog.user.username}</Card.Text>
+        <Card.Text>
+          Added by:{' '}
+          <Link to={`/users/${blog.user.id}`}>{blog.user.username}</Link>
+        </Card.Text>
       </Card.Body>
       <Card.Footer className='d-flex justify-content-between align-items-center'>
         <Card.Text>Likes: {blog.likes}</Card.Text>

@@ -1,10 +1,11 @@
 import { Container } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const UserInfo = () => {
   const id = useParams().id;
-  const user = useSelector(state => state.users.find(u => u.id === id));
+  const user = useSelector((state) => state.users.find((u) => u.id === id));
 
   if (!user) return <p>User not found</p>;
 
@@ -16,7 +17,9 @@ const UserInfo = () => {
       {blogs.length ? (
         <ul>
           {blogs.map((blog) => (
-            <li key={blog.id}>{blog.title}</li>
+            <li key={blog.id}>
+              <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+            </li>
           ))}
         </ul>
       ) : (
