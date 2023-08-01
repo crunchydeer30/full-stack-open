@@ -16,7 +16,6 @@ const UserInfo = () => {
   }
   const user = result.data;
   const blogs = user.blogs;
-  console.log(blogs);
 
   return (
     <section>

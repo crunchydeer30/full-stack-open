@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from 'react-query';
 import blogService from '../services/blogs';
-import Blog from './Blog';
+import { Link } from 'react-router-dom';
 
 const BlogList = () => {
   const result = useQuery('blogs', blogService.getAll, {
@@ -22,10 +22,9 @@ const BlogList = () => {
   return (
     <section className='bloglist'>
       {blogsToShow.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-        />
+        <article key={blog.id}>
+          <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+        </article>
       ))}
     </section>
   );
