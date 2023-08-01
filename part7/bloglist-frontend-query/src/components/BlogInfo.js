@@ -3,6 +3,7 @@ import blogService from '../services/blogs';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { useSetNotification } from '../context/NotificationContext';
+import CommentForm from './CommentForm';
 
 const BlogInfo = () => {
   const id = useParams().id;
@@ -54,6 +55,7 @@ const BlogInfo = () => {
       </section>
       <section>
         <h3>Comments</h3>
+        <CommentForm blog={blog} />
         {blog.comments ? (
           <ul>
             {blog.comments.map((comment) => (
