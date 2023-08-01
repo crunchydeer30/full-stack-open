@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 const UserInfo = () => {
   const id = useParams().id;
-  const result = useQuery('user',() => userService.getById(id));
+  const result = useQuery('user', () => userService.getById(id));
 
   if (result.isLoading) {
     return <div>loading data...</div>;
@@ -24,7 +24,9 @@ const UserInfo = () => {
       {blogs.length ? (
         <ul>
           {blogs.map((blog) => (
-            <li key={blog.id}>{blog.title}</li>
+            <li key={blog.id}>
+              <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+            </li>
           ))}
         </ul>
       ) : (

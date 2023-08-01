@@ -51,7 +51,6 @@ const App = () => {
         <Route path='/users' element={<UserList />} />
         <Route path='/users/:id' element={<UserInfo />} />
       </Routes>
-      <h1>Blogs</h1>
       <div>
         <span>{user.username} logged in&nbsp;</span>
         <button onClick={() => handleLogout()}>Log Out</button>

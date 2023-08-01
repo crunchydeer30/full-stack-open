@@ -1,10 +1,23 @@
-import { useQuery } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
 import blogService from '../services/blogs';
 import { useParams } from 'react-router';
+import { Link } from 'react-router-dom';
+import { useSetNotification } from '../context/NotificationContext';
 
 const BlogInfo = () => {
   const id = useParams().id;
+  const queryClient = useQueryClient();
   const result = useQuery('blog', () => blogService.getById(id));
+  const setNotification = useSetNotification();
+  const handleLikeMutation = useMutation(blogService.update, {
+    onSuccess: (newObject) => {
+      queryClient.invalidateQueries('blog');
+      setNotification(`Liked "${newObject.title}"`, 5);
+    },
+    onError: (error) => {
+      setNotification(error.message, 'error', 5);
+    },
+  });
 
   if (result.isLoading) {
     return <div>loading data...</div>;
@@ -16,12 +29,11 @@ const BlogInfo = () => {
   const blog = result.data;
 
   const handleLike = () => {
-    // try {
-    //   dispatch(likeBlog({ ...blog, user: blog.user.id }));
-    //   dispatch(setNotification(`Liked for "${blog.title}"`, 'success', 5));
-    // } catch (error) {
-    //   dispatch(setNotification(error.message, 'error', 5));
-    // }
+    handleLikeMutation.mutate({
+      ...blog,
+      likes: blog.likes + 1,
+      user: blog.user.id,
+    });
   };
 
   return (
@@ -35,7 +47,10 @@ const BlogInfo = () => {
             like
           </button>
         </div>
-        <p>Added by {blog.user.username}</p>
+        <p>
+          Added by{' '}
+          <Link to={`/users/${blog.user.id}`}>{blog.user.username}</Link>
+        </p>
       </section>
       <section>
         <h3>Comments</h3>
