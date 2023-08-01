@@ -11,6 +11,7 @@ import { Routes, Route } from 'react-router-dom';
 import UserList from './components/UserList';
 import UserInfo from './components/UserInfo';
 import BlogInfo from './components/BlogInfo';
+import Header from './components/Header';
 
 const App = () => {
   const user = useContext(UserContext)[0];
@@ -43,6 +44,7 @@ const App = () => {
 
   return (
     <div>
+      <Header />
       <Notification />
       <Routes>
         <Route path='/' element={<BlogList />} />

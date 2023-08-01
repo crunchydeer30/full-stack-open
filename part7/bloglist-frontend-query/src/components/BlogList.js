@@ -21,6 +21,7 @@ const BlogList = () => {
 
   return (
     <section className='bloglist'>
+      <h1>Blogs</h1>
       {blogsToShow.map((blog) => (
         <article key={blog.id}>
           <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
