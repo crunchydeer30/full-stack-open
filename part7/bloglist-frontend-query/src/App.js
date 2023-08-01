@@ -10,12 +10,12 @@ import { useSetUser } from './context/UserContext';
 import UserContext from './context/UserContext';
 import { Routes, Route } from 'react-router-dom';
 import UserList from './components/UserList';
+import UserInfo from './components/UserInfo';
 
 const App = () => {
   const setNotification = useSetNotification();
   const user = useContext(UserContext)[0];
   const setUser = useSetUser();
-  console.log(user);
 
   const blogFormRef = useRef();
 
@@ -76,6 +76,7 @@ const App = () => {
         <Route path='/' element={<BlogList />} />
         <Route path='/blogs' element={<BlogList />} />
         <Route path='/users' element={<UserList />} />
+        <Route path='/users/:id' element={<UserInfo />} />
       </Routes>
       <h1>Blogs</h1>
       <div>

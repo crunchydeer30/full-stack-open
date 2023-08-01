@@ -12,7 +12,8 @@ usersRouter.get('/', async (request, response) => {
 });
 
 usersRouter.get('/:id', async (request, response) => {
-  const user = await User.findById(request.params.id);
+  const user = await User.findById(request.params.id)
+    .populate('blogs', { title: 1, url: 1 });
   if (user) response.json(user);
   else response.status(404).json({ error: 'user does not exist' });
 });
