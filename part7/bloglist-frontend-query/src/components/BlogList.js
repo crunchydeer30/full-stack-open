@@ -13,7 +13,7 @@ const BlogList = () => {
   }
 
   if (result.isError) {
-    return <div>anecdote service not available due to problems in server</div>;
+    return <div>Service not available due to problems in server</div>;
   }
 
   const blogs = result.data;
@@ -25,9 +25,6 @@ const BlogList = () => {
         <Blog
           key={blog.id}
           blog={blog}
-          // likeBlog={likeBlog}
-          // removeBlog={removeBlog}
-          // user={user}
         />
       ))}
     </section>

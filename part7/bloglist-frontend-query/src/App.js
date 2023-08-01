@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useEffect, useRef, useContext } from 'react';
 import { useSetNotification } from './context/NotificationContext';
 import blogService from './services/blogs';
 import LoginForm from './components/LoginForm';
@@ -8,6 +8,8 @@ import Toggleagble from './components/Toggleable';
 import BlogList from './components/BlogList';
 import { useSetUser } from './context/UserContext';
 import UserContext from './context/UserContext';
+import { Routes, Route } from 'react-router-dom';
+import UserList from './components/UserList';
 
 const App = () => {
   const setNotification = useSetNotification();
@@ -70,6 +72,11 @@ const App = () => {
   return (
     <div>
       <Notification />
+      <Routes>
+        <Route path='/' element={<BlogList />} />
+        <Route path='/blogs' element={<BlogList />} />
+        <Route path='/users' element={<UserList />} />
+      </Routes>
       <h1>Blogs</h1>
       <div>
         <span>{user.username} logged in&nbsp;</span>
@@ -78,7 +85,6 @@ const App = () => {
       <Toggleagble buttonLabel='New Blog' ref={blogFormRef}>
         <BlogForm />
       </Toggleagble>
-      <BlogList />
     </div>
   );
 };
