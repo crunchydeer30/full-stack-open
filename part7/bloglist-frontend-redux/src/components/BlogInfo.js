@@ -3,10 +3,13 @@ import { useParams } from 'react-router-dom';
 import { likeBlog } from '../reducers/blogReducer';
 import { setNotification } from '../reducers/notificationReducer';
 import CommentForm from './CommentForm';
+import { Button, Container } from 'react-bootstrap';
 
 const BlogInfo = () => {
   const id = useParams().id;
   const blog = useSelector((state) => state.blogs.find((b) => b.id === id));
+  console.log(blog);
+
   const dispatch = useDispatch();
 
   if (!blog) return <p>Blog not found</p>;
@@ -14,22 +17,22 @@ const BlogInfo = () => {
   const handleLike = () => {
     try {
       dispatch(likeBlog({ ...blog, user: blog.user.id }));
-      dispatch(setNotification(`Voted for "${blog.title}"`, 'success', 5));
+      dispatch(setNotification(`Liked for "${blog.title}"`, 'success', 5));
     } catch (error) {
       dispatch(setNotification(error.message, 'error', 5));
     }
   };
 
   return (
-    <section>
+    <Container className='pt-4'>
       <section>
         <h2>{blog.title}</h2>
         <a href={blog.url}>{blog.url}</a>
         <div className='likes'>
           <span>Likes: {blog.likes}&nbsp;</span>
-          <button onClick={handleLike} className='btn__like'>
+          <Button onClick={handleLike} className='btn__like'>
             like
-          </button>
+          </Button>
         </div>
         <p>Added by {blog.user.username}</p>
       </section>
@@ -46,7 +49,7 @@ const BlogInfo = () => {
           <p>No comments yet</p>
         )}
       </section>
-    </section>
+    </Container>
   );
 };
 

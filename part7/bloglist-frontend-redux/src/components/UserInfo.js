@@ -1,3 +1,4 @@
+import { Container } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
@@ -9,7 +10,7 @@ const UserInfo = () => {
 
   const blogs = user.blogs;
   return (
-    <section>
+    <Container className='pt-4'>
       <h1>{user.username}</h1>
       <h2>Added Blogs</h2>
       {blogs.length ? (
@@ -21,7 +22,7 @@ const UserInfo = () => {
       ) : (
         <p>User has not added any blogs yet</p>
       )}
-    </section>
+    </Container>
   );
 };
 

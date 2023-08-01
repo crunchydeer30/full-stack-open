@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setNotification } from '../reducers/notificationReducer';
 import { loginUser } from '../reducers/loginReducer';
+import { Button, Container, Form } from 'react-bootstrap';
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -24,12 +25,12 @@ const LoginForm = () => {
   };
 
   return (
-    <section>
+    <Container className='mt-4'>
       <h1>Log In to Application</h1>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label htmlFor='username'>Username: </label>
-          <input
+      <Form onSubmit={handleLogin}>
+        <Form.Group>
+          <Form.Label htmlFor='username'>Username: </Form.Label>
+          <Form.Control
             type='text'
             name='username'
             id='username'
@@ -37,11 +38,11 @@ const LoginForm = () => {
             onChange={(e) => setUsername(e.target.value)}
             required
           />
-        </div>
+        </Form.Group>
 
-        <div>
-          <label htmlFor='password'>Password: </label>
-          <input
+        <Form.Group>
+          <Form.Label htmlFor='password'>Password: </Form.Label>
+          <Form.Control
             type='password'
             name='password'
             id='password'
@@ -49,10 +50,10 @@ const LoginForm = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </div>
-        <button id='login-button'>Log In</button>
-      </form>
-    </section>
+        </Form.Group>
+        <Button type='submit' id='login-button' className='mt-4'>Log In</Button>
+      </Form>
+    </Container>
   );
 };
 

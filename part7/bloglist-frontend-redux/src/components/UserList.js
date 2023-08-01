@@ -1,10 +1,11 @@
+import { Container } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 const Users = () => {
   const users = useSelector((state) => state.users);
   return (
-    <section>
+    <Container className='pt-4'>
       <h1>Users</h1>
       <table>
         <thead>
@@ -22,7 +23,7 @@ const Users = () => {
           ))}
         </tbody>
       </table>
-    </section>
+    </Container>
   );
 };
 

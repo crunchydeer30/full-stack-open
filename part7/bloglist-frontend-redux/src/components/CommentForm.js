@@ -2,6 +2,7 @@ import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { setNotification } from '../reducers/notificationReducer';
 import { createComment } from '../reducers/blogReducer';
+import { Button, Form } from 'react-bootstrap';
 
 const CommentForm = ({ blog }) => {
   const dispatch = useDispatch();
@@ -18,15 +19,16 @@ const CommentForm = ({ blog }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
+    <Form onSubmit={handleSubmit}>
+      <Form.Control
         type='text'
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         required
+        placeholder='Enter comment...'
       />
-      <button>Submit</button>
-    </form>
+      <Button type='submit' className='my-4'>Submit</Button>
+    </Form>
   );
 };
 

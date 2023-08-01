@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { Container } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 
 const Notification = () => {
@@ -5,15 +7,15 @@ const Notification = () => {
   if (!notification) return;
 
   return (
-    <div
+    <Container
       className={
         notification.type === 'error'
-          ? 'notification error'
-          : 'notification success'
+          ? 'alert alert-dismissible alert-danger my-2'
+          : 'alert alert-dismissible alert-success my-2'
       }
     >
       {notification.message}
-    </div>
+    </Container>
   );
 };
 

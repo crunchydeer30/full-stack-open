@@ -9,19 +9,15 @@ import { Routes, Route } from 'react-router-dom';
 import BlogList from './components/BlogList';
 import blogService from './services/blogs';
 import LoginForm from './components/LoginForm';
-import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
-import Toggleagble from './components/Toggleable';
-import LogoutButton from './components/LogoutButton';
 import Users from './components/UserList';
 import UserInfo from './components/UserInfo';
 import BlogInfo from './components/BlogInfo';
-import NavBar from './components/NavBar';
+import Header from './components/Header';
 
 const App = () => {
   const dispatch = useDispatch();
   const loggedUser = useSelector((state) => state.loggedUser);
-  const blogFormRef = useRef();
 
   useEffect(() => {
     dispatch(initializeBlogs());
@@ -43,6 +39,7 @@ const App = () => {
   if (!loggedUser) {
     return (
       <>
+        <Header />
         <Notification />
         <LoginForm />
       </>
@@ -51,12 +48,8 @@ const App = () => {
 
   return (
     <div>
+      <Header />
       <Notification />
-      <h1>Blogs</h1>
-      <NavBar />
-      <Toggleagble buttonLabel='New Blog' ref={blogFormRef}>
-        <BlogForm />
-      </Toggleagble>
       <Routes>
         <Route path='/' element={<BlogList />} />
         <Route path='/blogs' element={<BlogList />} />
