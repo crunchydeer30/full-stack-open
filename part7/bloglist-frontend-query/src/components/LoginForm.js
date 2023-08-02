@@ -4,6 +4,8 @@ import { useSetNotification } from '../context/NotificationContext';
 import { useSetUser } from '../context/UserContext';
 import loginService from '../services/login';
 import blogService from '../services/blogs';
+import { TextField } from '@mui/material';
+import { Button } from '@mui/material';
 
 const LoginForm = () => {
   const setNotification = useSetNotification();
@@ -36,8 +38,9 @@ const LoginForm = () => {
       <h1>Log In to Application</h1>
       <form onSubmit={handleLogin}>
         <div>
-          <label htmlFor='username'>Username: </label>
-          <input
+          <TextField
+            size='small'
+            placeholder='Username'
             type='text'
             name='username'
             id='username'
@@ -48,8 +51,9 @@ const LoginForm = () => {
         </div>
 
         <div>
-          <label htmlFor='password'>Password: </label>
-          <input
+          <TextField
+            size='small'
+            placeholder='Password'
             type='password'
             name='password'
             id='password'
@@ -58,7 +62,14 @@ const LoginForm = () => {
             required
           />
         </div>
-        <button id='login-button'>Log In</button>
+        <Button
+          type='submit'
+          id='login-button'
+          variant='contained'
+          sx={{ mt: 2 }}
+        >
+          Log In
+        </Button>
       </form>
     </section>
   );

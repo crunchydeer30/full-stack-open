@@ -12,12 +12,11 @@ import UserList from './components/UserList';
 import UserInfo from './components/UserInfo';
 import BlogInfo from './components/BlogInfo';
 import Header from './components/Header';
+import { Container } from '@mui/material';
 
 const App = () => {
   const user = useContext(UserContext)[0];
   const setUser = useSetUser();
-
-  const blogFormRef = useRef();
 
   useEffect(() => {
     const loggedUser = window.localStorage.getItem('loggedUser');
@@ -28,16 +27,14 @@ const App = () => {
     }
   }, []);
 
-  const handleLogout = async () => {
-    setUser(null);
-    window.localStorage.removeItem('loggedUser');
-  };
-
   if (!user) {
     return (
       <>
-        <Notification />
-        <LoginForm />
+        <Header />
+        <Container>
+          <Notification />
+          <LoginForm />
+        </Container>
       </>
     );
   }
@@ -53,13 +50,6 @@ const App = () => {
         <Route path='/users' element={<UserList />} />
         <Route path='/users/:id' element={<UserInfo />} />
       </Routes>
-      <div>
-        <span>{user.username} logged in&nbsp;</span>
-        <button onClick={() => handleLogout()}>Log Out</button>
-      </div>
-      <Toggleagble buttonLabel='New Blog' ref={blogFormRef}>
-        <BlogForm />
-      </Toggleagble>
     </div>
   );
 };

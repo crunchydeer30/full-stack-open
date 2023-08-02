@@ -1,22 +1,17 @@
 import NotificationContext from '../context/NotificationContext';
 import { useContext } from 'react';
+import { Alert } from '@mui/material';
+import { Container } from '@mui/material';
 
 const Notification = () => {
   const notification = useContext(NotificationContext)[0];
-  console.log(notification);
 
   if (!notification) return;
 
   return (
-    <div
-      className={
-        notification.type === 'error'
-          ? 'notification error'
-          : 'notification success'
-      }
-    >
-      {notification.message}
-    </div>
+    <Container>
+      <Alert severity={notification.type}>{notification.message}</Alert>
+    </Container>
   );
 };
 

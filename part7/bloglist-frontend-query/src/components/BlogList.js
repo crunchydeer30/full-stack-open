@@ -1,6 +1,9 @@
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import blogService from '../services/blogs';
 import { Link } from 'react-router-dom';
+import { Container } from '@mui/material';
+import { Card } from '@mui/material';
+import BlogForm from './BlogForm';
 
 const BlogList = () => {
   const result = useQuery('blogs', blogService.getAll, {
@@ -20,14 +23,15 @@ const BlogList = () => {
   const blogsToShow = blogs.sort((a, b) => b.likes - a.likes);
 
   return (
-    <section className='bloglist'>
+    <Container className='bloglist'>
       <h1>Blogs</h1>
+      <BlogForm />
       {blogsToShow.map((blog) => (
-        <article key={blog.id}>
+        <Card key={blog.id}>
           <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-        </article>
+        </Card>
       ))}
-    </section>
+    </Container>
   );
 };
 

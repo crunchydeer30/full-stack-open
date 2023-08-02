@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import blogService from '../services/blogs';
 import { useSetNotification } from '../context/NotificationContext';
+import { Button, TextField } from '@mui/material';
 
 const CommentForm = ({ blog }) => {
   const queryClient = useQueryClient();
@@ -14,9 +15,10 @@ const CommentForm = ({ blog }) => {
       onSuccess: () => {
         queryClient.invalidateQueries('blog');
         setNotification('Comment created', 'success');
+        setComment('');
       },
       onError: (error) => {
-        setNotification(error.message, 'error');
+        setNotification(error.response.data.error, 'error');
       },
     }
   );
@@ -28,16 +30,17 @@ const CommentForm = ({ blog }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input
+      <TextField
+        size='small'
         type='text'
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         required
         placeholder='Enter comment...'
       />
-      <button type='submit' className='my-4'>
+      <Button type='submit' className='my-4' variant='contained' sx={{ ml: 2 }}>
         Submit
-      </button>
+      </Button>
     </form>
   );
 };

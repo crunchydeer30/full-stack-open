@@ -4,6 +4,7 @@ import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { useSetNotification } from '../context/NotificationContext';
 import CommentForm from './CommentForm';
+import { Container, Button } from '@mui/material';
 
 const BlogInfo = () => {
   const id = useParams().id;
@@ -13,7 +14,8 @@ const BlogInfo = () => {
   const handleLikeMutation = useMutation(blogService.update, {
     onSuccess: (newObject) => {
       queryClient.invalidateQueries('blog');
-      setNotification(`Liked "${newObject.title}"`, 5);
+      console.log(newObject.title);
+      setNotification(`Liked "${newObject.title}"`, 'success', 5);
     },
     onError: (error) => {
       setNotification(error.message, 'error', 5);
@@ -38,15 +40,20 @@ const BlogInfo = () => {
   };
 
   return (
-    <>
+    <Container>
       <section>
         <h2>{blog.title}</h2>
         <a href={blog.url}>{blog.url}</a>
         <div className='likes'>
           <span>Likes: {blog.likes}&nbsp;</span>
-          <button onClick={handleLike} className='btn__like'>
+          <Button
+            onClick={handleLike}
+            className='btn__like'
+            variant='contained'
+            sx={{ ml: 1 }}
+          >
             like
-          </button>
+          </Button>
         </div>
         <p>
           Added by{' '}
@@ -66,7 +73,7 @@ const BlogInfo = () => {
           <p>No comments yet</p>
         )}
       </section>
-    </>
+    </Container>
   );
 };
 

@@ -2,6 +2,7 @@ import { useQuery } from 'react-query';
 import userService from '../services/users';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
+import { Container } from '@mui/material';
 
 const UserInfo = () => {
   const id = useParams().id;
@@ -18,7 +19,7 @@ const UserInfo = () => {
   const blogs = user.blogs;
 
   return (
-    <section>
+    <Container>
       <h1>{user.username}</h1>
       <h2>Added Blogs</h2>
       {blogs.length ? (
@@ -32,7 +33,7 @@ const UserInfo = () => {
       ) : (
         <p>User has not added any blogs yet</p>
       )}
-    </section>
+    </Container>
   );
 };
 

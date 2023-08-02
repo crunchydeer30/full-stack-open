@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query';
 import userService from '../services/users';
 import { Link } from 'react-router-dom';
+import { Container } from '@mui/material';
 
 const UserList = () => {
   const result = useQuery('users', userService.getAll, {
@@ -20,7 +21,7 @@ const UserList = () => {
   const usersToShow = users.sort((a, b) => b.blogs.length - a.blogs.length);
 
   return (
-    <section>
+    <Container>
       <h1>Users</h1>
       <table>
         <thead>
@@ -40,7 +41,7 @@ const UserList = () => {
           ))}
         </tbody>
       </table>
-    </section>
+    </Container>
   );
 };
 
