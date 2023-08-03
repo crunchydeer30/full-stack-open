@@ -1,5 +1,6 @@
 import { ALL_AUTHORS } from '../queries';
 import { useQuery } from '@apollo/client';
+import EditAuthorForm from './EditAuthorForm';
 
 const Authors = (props) => {
   const result = useQuery(ALL_AUTHORS);
@@ -11,7 +12,7 @@ const Authors = (props) => {
   if (result.isError) {
     return <div>Service is not available due to problems on the server</div>;
   }
- 
+
   const authors = result.data.allAuthors;
 
   return (
@@ -33,6 +34,7 @@ const Authors = (props) => {
           ))}
         </tbody>
       </table>
+      <EditAuthorForm />
     </div>
   );
 };
