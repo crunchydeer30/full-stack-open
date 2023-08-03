@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
+import Select from 'react-select';
 import { useMutation } from '@apollo/client';
 import { ALL_AUTHORS, EDIT_BIRTHYEAR } from '../queries';
 import { useNotify } from '../NotificationContext';
 
-const EditAuthorForm = () => {
+const EditAuthorForm = ({ authors }) => {
   const notify = useNotify();
-  const [name, setName] = useState('');
   const [year, setYear] = useState('');
+  const [selectedAuthor, setSelectedAuthor] = useState(null);
+
+  const options = authors.map((a) => ({ value: a.name, label: a.name }));
 
   const [editBirthyear, result] = useMutation(EDIT_BIRTHYEAR, {
     refetchQueries: [{ query: ALL_AUTHORS }],
@@ -15,8 +18,8 @@ const EditAuthorForm = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    editBirthyear({ variables: { name, setBornTo: year } });
-    setName('');
+    editBirthyear({ variables: { name: selectedAuthor.value, setBornTo: year } });
+    setSelectedAuthor(null);
     setYear('');
   };
 
@@ -30,14 +33,11 @@ const EditAuthorForm = () => {
     <section>
       <h2>Edit Author</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <input
-            type='text'
-            placeholder='Name'
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
+        <Select
+          defaultValue={selectedAuthor}
+          onChange={setSelectedAuthor}
+          options={options}
+        />
         <div>
           <input
             type='number'
