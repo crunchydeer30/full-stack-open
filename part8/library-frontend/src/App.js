@@ -1,14 +1,15 @@
-import { useState } from 'react';
 import Authors from './components/Authors';
 import Books from './components/Books';
 import NewBook from './components/NewBook';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import Notification from './components/Notification';
 
 const App = () => {
   return (
     <div>
       <Navbar />
+      <Notification />
       <Routes>
         <Route path='/' element={<Authors />} />
         <Route path='/authors' element={<Authors />} />

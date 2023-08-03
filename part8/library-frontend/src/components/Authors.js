@@ -11,7 +11,7 @@ const Authors = (props) => {
   if (result.isError) {
     return <div>Service is not available due to problems on the server</div>;
   }
-
+ 
   const authors = result.data.allAuthors;
 
   return (
