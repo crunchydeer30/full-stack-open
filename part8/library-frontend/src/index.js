@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { NotificationContextProvider } from './NotificationContext';
+import { UserContextProvider } from './UserContext';
 
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
@@ -14,9 +15,11 @@ const client = new ApolloClient({
 ReactDOM.createRoot(document.getElementById('root')).render(
   <ApolloProvider client={client}>
     <Router>
-      <NotificationContextProvider>
-        <App />
-      </NotificationContextProvider>
+      <UserContextProvider>
+        <NotificationContextProvider>
+          <App />
+        </NotificationContextProvider>
+      </UserContextProvider>
     </Router>
   </ApolloProvider>
 );

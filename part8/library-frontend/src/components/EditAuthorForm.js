@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Select from 'react-select';
 import { useMutation } from '@apollo/client';
 import { ALL_AUTHORS, EDIT_BIRTHYEAR } from '../queries';
 import { useNotify } from '../NotificationContext';
+import UserContext from '../UserContext';
 
 const EditAuthorForm = ({ authors }) => {
+  const [user] = useContext(UserContext);
   const notify = useNotify();
   const [year, setYear] = useState('');
   const [selectedAuthor, setSelectedAuthor] = useState(null);
@@ -18,7 +20,9 @@ const EditAuthorForm = ({ authors }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    editBirthyear({ variables: { name: selectedAuthor.value, setBornTo: year } });
+    editBirthyear({
+      variables: { name: selectedAuthor.value, setBornTo: year },
+    });
     setSelectedAuthor(null);
     setYear('');
   };
@@ -28,6 +32,8 @@ const EditAuthorForm = ({ authors }) => {
       notify('person not found');
     }
   }, [result.data]); // eslint-disable-line
+
+  if (!user) return;
 
   return (
     <section>
