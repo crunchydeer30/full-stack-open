@@ -1,11 +1,11 @@
 const KEY = 'loggedUser';
 
 const saveUser = (user) => {
-  localStorage.setItem(KEY, JSON.stringify(user));
+  localStorage.setItem(KEY, user);
 };
 
 const loadUser = () => {
-  return JSON.parse(window.localStorage.getItem(KEY));
+  return window.localStorage.getItem(KEY);
 };
 
 const removeUser = () => {

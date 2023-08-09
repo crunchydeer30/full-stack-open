@@ -106,7 +106,7 @@ const resolvers = {
     },
   },
   Mutation: {
-    addBook: async (root, args) => {
+    addBook: async (root, args, context) => {
       let author = await Author.findOne({ name: args.author });
       const currentUser = context.currentUser;
 
@@ -201,7 +201,8 @@ const resolvers = {
         id: user._id,
       };
 
-      return { value: jwt.sign(userForToken, process.env.JWT_SECRET) };
+      const token = jwt.sign(userForToken, process.env.JWT_SECRET);
+      return { value: token };
     },
   },
 };

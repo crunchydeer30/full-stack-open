@@ -1,8 +1,13 @@
 import { useQuery } from '@apollo/client';
 import { ALL_BOOKS } from '../queries';
+import { useState } from 'react';
 
 const Books = (props) => {
-  const result = useQuery(ALL_BOOKS);
+  const [selectedGenre, setSelectedGenre] = useState('');
+
+  const result = useQuery(ALL_BOOKS, {
+    variables: { genre: selectedGenre },
+  });
 
   if (result.loading) return <div>Loading...</div>;
 
@@ -11,17 +16,24 @@ const Books = (props) => {
   }
 
   const books = result.data.allBooks;
+  console.log(books);
+
+  let genres = new Set();
+  if (books) {
+    books.forEach((book) => book.genres.forEach((genre) => genres.add(genre)));
+    genres = Array.from(genres);
+  }
 
   return (
     <div>
-      <h2>books</h2>
+      <h2>Books</h2>
 
       <table>
         <tbody>
           <tr>
-            <th></th>
-            <th>author</th>
-            <th>published</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Published</th>
           </tr>
           {books.map((a) => (
             <tr key={a.title}>
@@ -32,6 +44,20 @@ const Books = (props) => {
           ))}
         </tbody>
       </table>
+      <section>
+        <h3>Filter by genre</h3>
+        <select
+          value={selectedGenre}
+          onChange={(e) => setSelectedGenre(e.target.value)}
+        >
+          <option value=''>---</option>
+          {genres.map((genre) => (
+            <option key={genre} value={genre}>
+              {genre}
+            </option>
+          ))}
+        </select>
+      </section>
     </div>
   );
 };
