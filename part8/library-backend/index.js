@@ -100,6 +100,10 @@ const resolvers = {
     name: (root) => {
       return root.name;
     },
+    bookCount: async (root) => {
+      const books = await Book.find({ author: root.id });
+      return books.length;
+    },
   },
   Mutation: {
     addBook: async (root, args) => {
