@@ -1,15 +1,9 @@
-import { useQuery, useSubscription } from '@apollo/client';
-import { ALL_BOOKS, BOOK_ADDED } from '../queries';
-import { useState } from 'react';
+import { useQuery} from '@apollo/client';
+import { ALL_BOOKS } from '../queries';
+import { useState } from 'react'; 
 
 const Books = (props) => {
   const [selectedGenre, setSelectedGenre] = useState('');
-
-  useSubscription(BOOK_ADDED, {
-    onData: ({ data }) => {
-      console.log(data);
-    },
-  });
 
   const result = useQuery(ALL_BOOKS, {
     variables: { genre: selectedGenre },
@@ -22,8 +16,6 @@ const Books = (props) => {
   }
 
   const books = result.data.allBooks;
-  console.log(books);
-
   let genres = new Set();
   if (books) {
     books.forEach((book) => book.genres.forEach((genre) => genres.add(genre)));
