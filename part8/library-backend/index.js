@@ -58,6 +58,8 @@ const start = async () => {
     ],
   })
 
+  mongoose.set('debug', true);
+
   await server.start();
 
   app.use(
