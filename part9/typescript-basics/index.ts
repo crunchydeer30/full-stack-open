@@ -26,7 +26,7 @@ app.get('/bmi', (req, res) => {
     if (error instanceof Error) {
       errorMessage = error.message;
     }
-    return res.status(400).json({error: errorMessage});
+    return res.status(400).json({ error: errorMessage });
   }
 });
 
