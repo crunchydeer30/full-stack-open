@@ -1,3 +1,8 @@
+interface excerciseData {
+  target: number;
+  exceriseHours: number[];
+}
+
 interface exerciseReport {
   perdiodLength: number;
   trainingDays: number;
@@ -8,9 +13,22 @@ interface exerciseReport {
   average: number;
 }
 
+const parseArguments = (args: string[]): excerciseData => {
+  if (args.length < 4) throw new Error('Too few arguments');
+  if (!isNaN(Number(args[0])))
+    throw new Error('Target hours value must be a number!');
+  if (args.slice(3).some((n) => isNaN(Number(n))))
+    throw new Error('All training hours values must be numbers!');
+
+  return {
+    target: Number(args[2]),
+    exceriseHours: args.slice(3).map((n) => Number(n)),
+  };
+};
+
 const calculateExercises = (
-  excerciseHours: number[],
-  targetHours: number
+  targetHours: number,
+  excerciseHours: number[]
 ): exerciseReport => {
   if (!excerciseHours.length) throw new Error('No data provided!');
 
@@ -32,4 +50,13 @@ const calculateExercises = (
   };
 };
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+try {
+  const { target, exceriseHours } = parseArguments(process.argv);
+  console.log(calculateExercises(target, exceriseHours));
+} catch (error: unknown) {
+  if (error instanceof Error) {
+    console.log(error.message);
+  }
+}
+
+export default calculateExercises;
