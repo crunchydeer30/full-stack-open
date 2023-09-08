@@ -13,7 +13,7 @@ interface exerciseReport {
   average: number;
 }
 
-const parseArguments = (args: string[]): excerciseData => {
+export const parseArguments = (args: string[]): excerciseData => {
   if (args.length < 4) throw new Error('Too few arguments');
   if (!isNaN(Number(args[0])))
     throw new Error('Target hours value must be a number!');
@@ -26,7 +26,7 @@ const parseArguments = (args: string[]): excerciseData => {
   };
 };
 
-const calculateExercises = (
+export const calculateExercises = (
   targetHours: number,
   excerciseHours: number[]
 ): exerciseReport => {
@@ -50,13 +50,11 @@ const calculateExercises = (
   };
 };
 
-try {
-  const { target, exceriseHours } = parseArguments(process.argv);
-  console.log(calculateExercises(target, exceriseHours));
-} catch (error: unknown) {
-  if (error instanceof Error) {
-    console.log(error.message);
-  }
-}
-
-export default calculateExercises;
+// try {
+//   const { target, exceriseHours } = parseArguments(process.argv);
+//   console.log(calculateExercises(target, exceriseHours));
+// } catch (error: unknown) {
+//   if (error instanceof Error) {
+//     console.log(error.message);
+//   }
+// }

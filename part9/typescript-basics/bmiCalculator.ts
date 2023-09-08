@@ -3,7 +3,7 @@ interface BodyMetrics {
   weight: number;
 }
 
-const parseArguments = (args: string[]): BodyMetrics => {
+export const parseArguments = (args: string[]): BodyMetrics => {
   if (args.length < 4) throw new Error('Not enough arguments');
   if (args.length > 4) throw new Error('Too many arguments');
   
@@ -19,7 +19,7 @@ const parseArguments = (args: string[]): BodyMetrics => {
 };
 
 
-const calculateBmi = (height: number, weight: number): string => {
+export const calculateBmi = (height: number, weight: number): string => {
   if (weight <= 0 || height <= 0) {
     throw new Error('Height and weight values must be greater than 0!');
   }
@@ -45,13 +45,11 @@ const calculateBmi = (height: number, weight: number): string => {
   }
 };
 
-try {
-  const {height, weight} = parseArguments(process.argv);  
-  console.log(calculateBmi(height, weight));
-} catch (error: unknown) {
-  if (error instanceof Error) {
-    console.log(error.message);
-  }
-}
-
-export default calculateBmi;
+// try {
+//   const {height, weight} = parseArguments(process.argv);  
+//   console.log(calculateBmi(height, weight));
+// } catch (error: unknown) {
+//   if (error instanceof Error) {
+//     console.log(error.message);
+//   }
+// }

@@ -1,0 +1,6 @@
+POST http://localhost:3002/excercises 
+
+Content-Type: application/json
+{
+    "name": "sampleasds"
+}
