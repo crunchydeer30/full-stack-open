@@ -1,0 +1,19 @@
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.diary-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.diary-entry__date {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
