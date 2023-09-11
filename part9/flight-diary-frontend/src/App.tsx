@@ -3,10 +3,12 @@ import diaryService from './services/diaryService';
 import { DiaryEntry, NewDiaryEntry } from './types';
 import DiaryEntries from './components/DiaryEntries';
 import DiaryEntryForm from './components/DiaryEntryForm';
+import Notification from './components/Notification';
 import axios from 'axios';
 
 function App() {
   const [diaryEntries, setDiaryEntries] = useState<DiaryEntry[]>([]);
+  const [notifcation, setNotification] = useState('');
 
   useEffect(() => {
     try {
@@ -14,30 +16,36 @@ function App() {
         setDiaryEntries(response);
       });
     } catch (error: unknown) {
-      let errorMessage = 'Something went wrong';
       if (axios.isAxiosError(error)) {
-        errorMessage += ': ' + error.message;
+        notify(error.response?.data);
       }
-      console.log(errorMessage);
+      console.error(error);
     }
   }, []);
 
-  const addDiaryEntry = (newEntry: NewDiaryEntry) => {
+  const addDiaryEntry = async (newEntry: NewDiaryEntry) => {
     try {
-      diaryService
-        .addEntry(newEntry)
-        .then((data) => setDiaryEntries([...diaryEntries, data]));
+      const returnedEntry = await diaryService.addEntry(newEntry);
+      setDiaryEntries([...diaryEntries, returnedEntry]);
     } catch (error: unknown) {
-      let errorMessage = 'Something went wrong';
+      console.log(error)
       if (axios.isAxiosError(error)) {
-        errorMessage += ': ' + error.message;
+        notify(error.response?.data);
       }
-      console.log(errorMessage);
+      console.error(error);
     }
   };
 
+  const notify = (message: string) => {
+    setNotification(message);
+    setTimeout(() => {
+      setNotification('');
+    }, 5000);
+  }
+
   return (
     <div className='App'>
+      <Notification message={notifcation} />
       <DiaryEntryForm addDiaryEntry={addDiaryEntry} />
       <DiaryEntries entries={diaryEntries} />
     </div>

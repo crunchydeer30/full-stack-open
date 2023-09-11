@@ -17,3 +17,8 @@
   font-size: 1.2rem;
   margin-bottom: 1rem;
 }
+
+.notification {
+  color: red;
+  font-size: 1.5rem;
+}
