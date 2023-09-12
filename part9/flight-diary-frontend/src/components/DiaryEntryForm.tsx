@@ -31,6 +31,7 @@ const DiaryEntryForm = (props: DiaryEntryFormProps) => {
           <input
             type='date'
             placeholder='1970-01-01'
+            value={date}
             onChange={(e) => setDate(e.target.value)}
           />
         </div>
@@ -62,6 +63,7 @@ const DiaryEntryForm = (props: DiaryEntryFormProps) => {
           <label htmlFor='comment'>Comment: </label>
           <input
             type='text'
+            value={comment}
             placeholder='your comment'
             onChange={(e) => setComment(e.target.value)}
           />
