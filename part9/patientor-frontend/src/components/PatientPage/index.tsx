@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Entry, Patient } from '../../types';
-import PatientEntry from './PatientEntry';
+import EntryDetails from './EntryDetails';
 import patientService from '../../services/patients';
 
 const PatientPage = () => {
@@ -10,7 +10,7 @@ const PatientPage = () => {
   const [entries, setEntries] = useState<Entry[]>();
 
   useEffect(() => {
-    const fetchPatientEntry = async (id: string) => {
+    const fetchPatient = async (id: string) => {
       const entry = await patientService.getById(id);
       console.log(entry);
       setPatient(entry);
@@ -18,7 +18,7 @@ const PatientPage = () => {
     };
     try {
       if (id) {
-        fetchPatientEntry(id);
+        fetchPatient(id);
       }
     } catch (error: unknown) {
       console.log(error);
@@ -34,9 +34,11 @@ const PatientPage = () => {
 
       <section>
         <h3>Entries</h3>
-        {entries?.map((entry) => (
-          <PatientEntry entry={entry} key={entry.id} />
-        ))}
+        {entries?.length ? (
+          entries?.map((entry) => <EntryDetails entry={entry} key={entry.id} />)
+        ) : (
+          <p>No entries</p>
+        )}
       </section>
     </section>
   );
