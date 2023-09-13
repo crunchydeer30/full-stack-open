@@ -1,3 +1,6 @@
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
+
+
 export interface Diagnosis {
   code: string;
   name: string;
@@ -5,9 +8,9 @@ export interface Diagnosis {
 }
 
 export enum Gender {
-  Male = "male",
-  Female = "female",
-  Other = "other"
+  Male = 'male',
+  Female = 'female',
+  Other = 'other',
 }
 
 export interface Patient {
@@ -17,7 +20,7 @@ export interface Patient {
   gender: Gender;
   ssn?: string;
   dateOfBirth?: string;
-  entries: Entry[]
+  entries: Entry[];
 }
 
 interface BaseEntry {
@@ -68,4 +71,6 @@ export type Entry =
   | OccupationalHealthcareEntry
   | HealthCheckEntry;
 
-export type PatientFormValues = Omit<Patient, "id" | "entries">;
+export type PatientFormValues = Omit<Patient, 'id' | 'entries'>;
+export type NewHealthCheckEntry = Omit<HealthCheckEntry, 'id'>;
+export type NewEntry = UnionOmit<Entry, 'id'>;

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Entry, Patient } from '../../types';
+import { Entry, NewEntry, Patient } from '../../types';
 import EntryDetails from './EntryDetails';
 import patientService from '../../services/patients';
+import EntryForm from './EntryForm';
 
 const PatientPage = () => {
   const id = useParams().id;
@@ -25,13 +26,24 @@ const PatientPage = () => {
     }
   }, [id]);
 
+  const handleAddEntry = async (newEntry: NewEntry) => {
+    if (id) {
+      try {
+        const data = await patientService.createEntry(id, newEntry);
+        setEntries(entries?.concat(data));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   return (
     <section>
       <h2>{patient?.name}</h2>
       <p>Gender: {patient?.gender}</p>
       <p>SSN: {patient?.ssn}</p>
       <p>Occupation: {patient?.occupation}</p>
-
+      <EntryForm handleAddEntry={handleAddEntry} />
       <section>
         <h3>Entries</h3>
         {entries?.length ? (
