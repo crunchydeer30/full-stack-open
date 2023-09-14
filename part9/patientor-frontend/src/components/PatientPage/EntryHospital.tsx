@@ -12,7 +12,7 @@ const EntryHospital = ({entry}: Props) => {
       <p>{entry.date} <LocalHospitalIcon /></p>
       <p>{entry.description}</p>
       <p>Diagnose by: {entry.specialist}</p> 
-      <p>{entry.discharge.date} - {entry.discharge.criteria}</p>
+      <p>{new Date(entry.discharge.date).toLocaleDateString()} - {entry.discharge.criteria}</p>
       {entry.diagnosisCodes && (
         <ul>
           {entry.diagnosisCodes.map((code) => (

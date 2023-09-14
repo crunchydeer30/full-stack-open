@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Entry, EntryType, NewEntry, Patient } from '../../types';
+import { Diagnosis, Entry, EntryType, NewEntry, Patient } from '../../types';
 import EntryDetails from './EntryDetails';
 import patientService from '../../services/patients';
 import FormHealthCheck from './FormHealthCheck';
@@ -9,6 +9,7 @@ import FormOccupational from './FormOccupational';
 import FormHospital from './FormHospital';
 import { assertNever } from '../../utils';
 import { Select, MenuItem } from '@mui/material';
+import diagnosesService from '../../services/diagnoses';
 
 interface Props {
   setNotification: (notificationMessage: string) => void;
@@ -19,11 +20,11 @@ const PatientPage = ({ setNotification }: Props) => {
   const [patient, setPatient] = useState<Patient>();
   const [entries, setEntries] = useState<Entry[]>();
   const [formType, setFormType] = useState<EntryType>(EntryType.Hospital);
+  const [diagnosesList, setDiagnosesList] = useState<Diagnosis[]>();
 
   useEffect(() => {
     const fetchPatient = async (id: string) => {
       const entry = await patientService.getById(id);
-      console.log(entry);
       setPatient(entry);
       setEntries(entry.entries);
     };
@@ -35,6 +36,14 @@ const PatientPage = ({ setNotification }: Props) => {
       console.log(error);
     }
   }, [id]);
+
+  useEffect(() => {
+    const fetchDiagnosesList = async () => {
+      const data = await diagnosesService.getAll();
+      setDiagnosesList(data);
+    }
+    fetchDiagnosesList();
+  }, []);
 
   const handleAddEntry = async (newEntry: NewEntry) => {
     if (id) {
@@ -57,6 +66,7 @@ const PatientPage = ({ setNotification }: Props) => {
           <FormHospital
             handleAddEntry={handleAddEntry}
             setNotification={setNotification}
+            diagnosesList={diagnosesList}
           />
         );
       case EntryType.HealthCheckEntry:
@@ -64,6 +74,7 @@ const PatientPage = ({ setNotification }: Props) => {
           <FormHealthCheck
             handleAddEntry={handleAddEntry}
             setNotification={setNotification}
+            diagnosesList={diagnosesList}
           />
         );
       case EntryType.OccupationalHealthcare:
@@ -71,6 +82,7 @@ const PatientPage = ({ setNotification }: Props) => {
           <FormOccupational
             handleAddEntry={handleAddEntry}
             setNotification={setNotification}
+            diagnosesList={diagnosesList}
           />
         );
       default:

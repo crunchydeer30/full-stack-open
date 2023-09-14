@@ -4,19 +4,14 @@ import { Button, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import DiagnosisButton from './DiagnosisButton';
+import { EntryFormProps } from '../../types';
+import SelectDiagnoses from './SelectDiagnoses';
 
-interface Props {
-  handleAddEntry: (newEntry: NewEntry) => Promise<void>;
-  setNotification: (notificationMessage: string) => void;
-}
-
-const FormOccupational = ({ handleAddEntry, setNotification }: Props) => {
+const FormOccupational = ({ handleAddEntry, diagnosesList}: EntryFormProps) => {
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [specialist, setSpecialist] = useState('');
   const [employerName, setEmployerName] = useState('');
-  const [diagnosisCode, setDiagnosisCode] = useState('');
   const [diagnosisCodes, setDiagnosisCodes] = useState<Array<string>>([]);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -40,19 +35,8 @@ const FormOccupational = ({ handleAddEntry, setNotification }: Props) => {
     setDescription('');
     setDate('');
     setSpecialist('');
-    setDiagnosisCode('');
     setDiagnosisCodes([]);
     setEmployerName('');
-  };
-
-  const addDiagnosisCode = () => {
-    if (!diagnosisCode || diagnosisCodes.includes(diagnosisCode)) return;
-    setDiagnosisCodes(diagnosisCodes.concat(diagnosisCode));
-    setDiagnosisCode('');
-  };
-
-  const removeDiagnosisCode = (code: string) => {
-    setDiagnosisCodes(diagnosisCodes.filter((c) => c !== code));
   };
 
   return (
@@ -60,6 +44,7 @@ const FormOccupational = ({ handleAddEntry, setNotification }: Props) => {
       <form onSubmit={handleSubmit}>
         <h3>New Entry</h3>
         <TextField
+          required
           label='Description'
           fullWidth
           value={description}
@@ -96,28 +81,12 @@ const FormOccupational = ({ handleAddEntry, setNotification }: Props) => {
           />
         </div>
 
-        <TextField
-          label='Diagonsis code'
-          fullWidth
-          value={diagnosisCode}
-          onChange={(e) => setDiagnosisCode(e.target.value)}
+        <p>Diagnoses codes</p>
+        <SelectDiagnoses
+          diagnosesList={diagnosesList}
+          diagnosisCodes={diagnosisCodes}
+          setDiagnosisCodes={setDiagnosisCodes}
         />
-        <Button
-          variant='contained'
-          onClick={addDiagnosisCode}
-          disabled={!diagnosisCode}
-        >
-          Add diagnosis
-        </Button>
-        <section>
-          {diagnosisCodes.map((code) => (
-            <DiagnosisButton
-              code={code}
-              key={code}
-              removeDiagnosisCode={removeDiagnosisCode}
-            />
-          ))}
-        </section>
 
         <p>Date</p>
         <DatePicker

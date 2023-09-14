@@ -1,5 +1,4 @@
 import {
-  Entry,
   EntryType,
   Gender,
   NewEntry,
@@ -20,13 +19,14 @@ export const toNewPatient = (object: unknown): NewPatient => {
     throw new Error('Incorrect or missing data');
   }
 
+  console.log(object);
+
   if (
     'name' in object &&
     'dateOfBirth' in object &&
     'ssn' in object &&
     'gender' in object &&
-    'occupation' in object &&
-    'entries' in object
+    'occupation' in object
   ) {
     const newEntry: NewPatient = {
       name: parseName(object.name),
@@ -34,7 +34,7 @@ export const toNewPatient = (object: unknown): NewPatient => {
       ssn: parseSSN(object.ssn),
       gender: parseGender(object.gender),
       occupation: parseOccupation(object.occupation),
-      entries: parseEntries(object.entries),
+      entries: [],
     };
 
     return newEntry;
@@ -61,7 +61,9 @@ export const toNewEntry = (object: unknown): NewEntry => {
         type: parseEntryType(object.type)
     };
     if ('diagnosisCodes' in object) {
-      baseEntry = {...baseEntry, diagnosisCodes: parseDiagnosisCodes(object.diagnosisCodes)};
+      console.log('diagnosisCodes called');
+      baseEntry = {...baseEntry, diagnosisCodes: parseDiagnosisCodes(object)};
+      console.log(baseEntry);  
     } 
     switch (baseEntry.type) {
       case EntryType.HealthCheckEntry:
@@ -163,16 +165,16 @@ const parseOccupation = (occupation: unknown): string => {
   return occupation;
 };
 
-const parseEntries = (entires: unknown): Entry[] => {
-  if (
-    !entires ||
-    !Array.isArray(entires) ||
-    !isEntriesArray(entires as object[])
-  ) {
-    throw new Error('Incorrect or missing entries: ' + entires);
-  }
-  return entires as Entry[];
-};
+// const parseEntries = (entires: unknown): Entry[] => {
+//   if (
+//     !entires ||
+//     !Array.isArray(entires) ||
+//     !isEntriesArray(entires as object[])
+//   ) {
+//     throw new Error('Incorrect or missing entries: ' + entires);
+//   }
+//   return entires as Entry[];
+// };
 
 const parseDescription = (description: unknown): string => {
   if (!description || !isString(description)) {
@@ -190,7 +192,6 @@ const parseSpecialist = (specialist: unknown): string => {
 
 const parseDiagnosisCodes = (object: unknown): Array<Diagnosis['code']> => {
   if (!object || typeof object !== 'object' || !('diagnosisCodes' in object)) {
-    // we will just trust the data to be in correct form
     return [] as Array<Diagnosis['code']>;
   }
 
@@ -242,23 +243,23 @@ const parseSickLeaves = (
   return sickLeaves as { startDate: string; endDate: string };
 };
 
-const isEntriesArray = (array: object[]): boolean => {
-  return !array.some((e) => {
-    if (typeof e !== 'object') {
-      return false;
-    }
-    return isEntry(e);
-  });
-};
+// const isEntriesArray = (array: object[]): boolean => {
+//   return !array.some((e) => {
+//     if (typeof e !== 'object') {
+//       return false;
+//     }
+//     return isEntry(e);
+//   });
+// };
 
-const isEntry = (entry: object): entry is Entry => {
-  if (!entry || !('type' in entry) || !isString(entry.type)) {
-    return false;
-  }
-  return Object.values(EntryType)
-    .map((v) => v.toString())
-    .includes(entry.type);
-};
+// const isEntry = (entry: object): entry is Entry => {
+//   if (!entry || !('type' in entry) || !isString(entry.type)) {
+//     return false;
+//   }
+//   return Object.values(EntryType)
+//     .map((v) => v.toString())
+//     .includes(entry.type);
+// };
 
 const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;

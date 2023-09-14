@@ -1,13 +1,14 @@
 import axios from 'axios';
 import { apiBaseUrl } from '../constants';
+import { Diagnosis } from '../types';
 
 const getAll = async () => {
-  const { data } = await axios.get(`${apiBaseUrl}/diagnoses`);
+  const { data } = await axios.get<Diagnosis[]>(`${apiBaseUrl}/diagnoses`);
   return data;
 };
 
 const getById = async (id: string) => {
-  const { data } = await axios.get(`${apiBaseUrl}/diagnoses/${id}`);
+  const { data } = await axios.get<Diagnosis>(`${apiBaseUrl}/diagnoses/${id}`);
   return data;
 };
 

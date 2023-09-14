@@ -4,18 +4,13 @@ import { Button, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import DiagnosisButton from './DiagnosisButton';
+import { EntryFormProps } from '../../types';
+import SelectDiagnoses from './SelectDiagnoses';
 
-interface Props {
-  handleAddEntry: (newEntry: NewEntry) => Promise<void>;
-  setNotification: (notificationMessage: string) => void;
-}
-
-const FormHospital = ({ handleAddEntry, setNotification }: Props) => {
+const FormHospital = ({ handleAddEntry, diagnosesList }: EntryFormProps) => {
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [specialist, setSpecialist] = useState('');
-  const [diagnosisCode, setDiagnosisCode] = useState('');
   const [diagnosisCodes, setDiagnosisCodes] = useState<Array<string>>([]);
   const [dischargeCriteria, setDischargeCriteria] = useState('');
   const [dischargeDate, setDischargeDate] = useState('');
@@ -27,7 +22,7 @@ const FormHospital = ({ handleAddEntry, setNotification }: Props) => {
       date: date.toString(),
       specialist,
       diagnosisCodes: diagnosisCodes,
-      discharge: {criteria: dischargeCriteria, date: dischargeDate},
+      discharge: { criteria: dischargeCriteria, date: dischargeDate },
       type: EntryType.Hospital as EntryType.Hospital,
     };
 
@@ -35,18 +30,9 @@ const FormHospital = ({ handleAddEntry, setNotification }: Props) => {
     setDescription('');
     setDate('');
     setSpecialist('');
-    setDiagnosisCode('');
     setDiagnosisCodes([]);
-  };
-
-  const addDiagnosisCode = () => {
-    if (!diagnosisCode || diagnosisCodes.includes(diagnosisCode)) return;
-    setDiagnosisCodes(diagnosisCodes.concat(diagnosisCode));
-    setDiagnosisCode('');
-  };
-
-  const removeDiagnosisCode = (code: string) => {
-    setDiagnosisCodes(diagnosisCodes.filter((c) => c !== code));
+    setDiagnosisCodes([]);
+    setDischargeDate('');
   };
 
   return (
@@ -54,6 +40,7 @@ const FormHospital = ({ handleAddEntry, setNotification }: Props) => {
       <form onSubmit={handleSubmit}>
         <h3>New Entry</h3>
         <TextField
+          required
           label='Description'
           fullWidth
           value={description}
@@ -83,28 +70,12 @@ const FormHospital = ({ handleAddEntry, setNotification }: Props) => {
           />
         </div>
 
-        <TextField
-          label='Diagonsis code'
-          fullWidth
-          value={diagnosisCode}
-          onChange={(e) => setDiagnosisCode(e.target.value)}
+        <p>Diagnoses codes</p>
+        <SelectDiagnoses
+          diagnosesList={diagnosesList}
+          diagnosisCodes={diagnosisCodes}
+          setDiagnosisCodes={setDiagnosisCodes}
         />
-        <Button
-          variant='contained'
-          onClick={addDiagnosisCode}
-          disabled={!diagnosisCode}
-        >
-          Add diagnosis
-        </Button>
-        <section>
-          {diagnosisCodes.map((code) => (
-            <DiagnosisButton
-              code={code}
-              key={code}
-              removeDiagnosisCode={removeDiagnosisCode}
-            />
-          ))}
-        </section>
 
         <p>Date</p>
         <DatePicker

@@ -1,26 +1,19 @@
 import { useState } from 'react';
-import { EntryType, HealthCheckRating, NewEntry } from '../../types';
+import { EntryType, HealthCheckRating } from '../../types';
 import { Button, MenuItem, Select, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import DiagnosisButton from './DiagnosisButton';
+import { EntryFormProps } from '../../types';
+import SelectDiagnoses from './SelectDiagnoses';
 
-interface Props {
-  handleAddEntry: (newEntry: NewEntry) => Promise<void>;
-  setNotification: (notificationMessage: string) => void;
-}
-
-const FormHealthCheck = ({ handleAddEntry, setNotification }: Props) => {
+const FormHealthCheck = ({ handleAddEntry, diagnosesList}: EntryFormProps) => {
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [specialist, setSpecialist] = useState('');
   const [healthCheckRating, sethHealthCheckRating] =
     useState<HealthCheckRating>(HealthCheckRating.Healthy);
-  const [diagnosisCode, setDiagnosisCode] = useState('');
   const [diagnosisCodes, setDiagnosisCodes] = useState<Array<string>>([]);
-
-
 
   const handleSubmit = (event: React.SyntheticEvent) => {
     event.preventDefault();
@@ -32,29 +25,22 @@ const FormHealthCheck = ({ handleAddEntry, setNotification }: Props) => {
       diagnosisCodes: diagnosisCodes,
       type: EntryType.HealthCheckEntry as EntryType.HealthCheckEntry,
     };
+    console.log(diagnosisCodes);
+    
     handleAddEntry(newEntry);
     setDescription('');
     setDate('');
     setSpecialist('');
-    setDiagnosisCode('');
     setDiagnosisCodes([]);
   };
 
-  const addDiagnosisCode = () => {
-    if (!diagnosisCode || diagnosisCodes.includes(diagnosisCode)) return;
-    setDiagnosisCodes(diagnosisCodes.concat(diagnosisCode));
-    setDiagnosisCode('');
-  };
-
-  const removeDiagnosisCode = (code: string) => {
-    setDiagnosisCodes(diagnosisCodes.filter((c) => c !== code));
-  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <form onSubmit={handleSubmit}>
         <h3>New Entry</h3>
         <TextField
+          required
           label='Description'
           fullWidth
           value={description}
@@ -81,25 +67,14 @@ const FormHealthCheck = ({ handleAddEntry, setNotification }: Props) => {
             Critical Risk
           </MenuItem>
         </Select>
-        <TextField
-          required
-          label='Diagonsis code'
-          fullWidth
-          value={diagnosisCode}
-          onChange={(e) => setDiagnosisCode(e.target.value)}
+
+        <p>Diagnoses codes</p>
+        <SelectDiagnoses
+          diagnosesList={diagnosesList}
+          diagnosisCodes={diagnosisCodes}
+          setDiagnosisCodes={setDiagnosisCodes}
         />
-        <Button variant='contained' onClick={addDiagnosisCode} disabled={!diagnosisCode}>
-          Add diagnosis
-        </Button>
-        <section>
-          {diagnosisCodes.map((code) => (
-            <DiagnosisButton
-              code={code}
-              key={code}
-              removeDiagnosisCode={removeDiagnosisCode}
-            />
-          ))}
-        </section>
+
         <p>Date</p>
         <DatePicker
           value={date}

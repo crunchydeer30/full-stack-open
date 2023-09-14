@@ -1,5 +1,10 @@
 type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
 
+export interface EntryFormProps {
+  diagnosesList: Diagnosis[] | undefined;
+  handleAddEntry: (newEntry: NewEntry) => Promise<void>;
+  setNotification: (notificationMessage: string) => void;
+}
 
 export interface Diagnosis {
   code: string;
