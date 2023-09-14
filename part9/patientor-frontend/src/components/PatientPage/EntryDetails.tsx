@@ -6,6 +6,7 @@ import OccupationalHealthcareEntry from './OccupationalHealthcateEntry';
 
 interface Props {
   entry: Entry;
+  setNotification: (notificationMessage: string) => void
 }
 
 const EntryDetails = ({ entry }: Props) => {

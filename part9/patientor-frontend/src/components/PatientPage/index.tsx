@@ -3,9 +3,14 @@ import { useParams } from 'react-router-dom';
 import { Entry, NewEntry, Patient } from '../../types';
 import EntryDetails from './EntryDetails';
 import patientService from '../../services/patients';
-import EntryForm from './EntryForm';
+import FormHealthCheck from './FormHealthCheck';
+import { isAxiosError } from 'axios';
 
-const PatientPage = () => {
+interface Props {
+  setNotification: (notificationMessage: string) => void;
+}
+
+const PatientPage = ({ setNotification }: Props) => {
   const id = useParams().id;
   const [patient, setPatient] = useState<Patient>();
   const [entries, setEntries] = useState<Entry[]>();
@@ -31,7 +36,10 @@ const PatientPage = () => {
       try {
         const data = await patientService.createEntry(id, newEntry);
         setEntries(entries?.concat(data));
-      } catch (error) {
+      } catch (error: unknown) {
+        if (isAxiosError(error)) {
+          setNotification(error.response?.data);
+        }
         console.log(error);
       }
     }
@@ -43,11 +51,20 @@ const PatientPage = () => {
       <p>Gender: {patient?.gender}</p>
       <p>SSN: {patient?.ssn}</p>
       <p>Occupation: {patient?.occupation}</p>
-      <EntryForm handleAddEntry={handleAddEntry} />
+      <FormHealthCheck
+        handleAddEntry={handleAddEntry}
+        setNotification={setNotification}
+      />
       <section>
         <h3>Entries</h3>
         {entries?.length ? (
-          entries?.map((entry) => <EntryDetails entry={entry} key={entry.id} />)
+          entries?.map((entry) => (
+            <EntryDetails
+              entry={entry}
+              key={entry.id}
+              setNotification={setNotification}
+            />
+          ))
         ) : (
           <p>No entries</p>
         )}
