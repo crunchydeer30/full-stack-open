@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { EntryType, HealthCheckRating, NewEntry } from '../../types';
-import { Button, MenuItem, Select, TextField } from '@mui/material';
+import { EntryType, NewEntry } from '../../types';
+import { Button, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
@@ -11,33 +11,38 @@ interface Props {
   setNotification: (notificationMessage: string) => void;
 }
 
-const FormHealthCheck = ({ handleAddEntry, setNotification }: Props) => {
+const FormOccupational = ({ handleAddEntry, setNotification }: Props) => {
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [specialist, setSpecialist] = useState('');
-  const [healthCheckRating, sethHealthCheckRating] =
-    useState<HealthCheckRating>(HealthCheckRating.Healthy);
+  const [employerName, setEmployerName] = useState('');
   const [diagnosisCode, setDiagnosisCode] = useState('');
   const [diagnosisCodes, setDiagnosisCodes] = useState<Array<string>>([]);
-
-
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const handleSubmit = (event: React.SyntheticEvent) => {
     event.preventDefault();
-    const newEntry = {
+    let newEntry: NewEntry = {
       description,
       date: date.toString(),
       specialist,
-      healthCheckRating,
+      employerName,
       diagnosisCodes: diagnosisCodes,
-      type: EntryType.HealthCheckEntry as EntryType.HealthCheckEntry,
+      type: EntryType.OccupationalHealthcare as EntryType.OccupationalHealthcare,
     };
+
+    if (startDate && endDate) {
+      newEntry = {...newEntry, sickLeave: {startDate, endDate}}
+    }
+
     handleAddEntry(newEntry);
     setDescription('');
     setDate('');
     setSpecialist('');
     setDiagnosisCode('');
     setDiagnosisCodes([]);
+    setEmployerName('');
   };
 
   const addDiagnosisCode = () => {
@@ -68,27 +73,40 @@ const FormHealthCheck = ({ handleAddEntry, setNotification }: Props) => {
           value={specialist}
           onChange={(e) => setSpecialist(e.target.value)}
         />
-        <Select
-          label='Health Rating'
-          fullWidth
-          value={healthCheckRating}
-          onChange={(e) => sethHealthCheckRating(+e.target.value)}
-        >
-          <MenuItem value={HealthCheckRating.Healthy}>Healthy</MenuItem>
-          <MenuItem value={HealthCheckRating.LowRisk}>Low Risk</MenuItem>
-          <MenuItem value={HealthCheckRating.HighRisk}>High Risk</MenuItem>
-          <MenuItem value={HealthCheckRating.CriticalRisk}>
-            Critical Risk
-          </MenuItem>
-        </Select>
+
         <TextField
           required
+          label='Employer name'
+          fullWidth
+          value={employerName}
+          onChange={(e) => setEmployerName(e.target.value)}
+        />
+
+        <div>
+          <p>Sick leave</p>
+          <DatePicker
+            label='Start date'
+            value={startDate}
+            onChange={(newValue) => setStartDate(newValue as string)}
+          />
+          <DatePicker
+            label='End date'
+            value={endDate}
+            onChange={(newValue) => setEndDate(newValue as string)}
+          />
+        </div>
+
+        <TextField
           label='Diagonsis code'
           fullWidth
           value={diagnosisCode}
           onChange={(e) => setDiagnosisCode(e.target.value)}
         />
-        <Button variant='contained' onClick={addDiagnosisCode} disabled={!diagnosisCode}>
+        <Button
+          variant='contained'
+          onClick={addDiagnosisCode}
+          disabled={!diagnosisCode}
+        >
           Add diagnosis
         </Button>
         <section>
@@ -100,6 +118,7 @@ const FormHealthCheck = ({ handleAddEntry, setNotification }: Props) => {
             />
           ))}
         </section>
+
         <p>Date</p>
         <DatePicker
           value={date}
@@ -115,4 +134,4 @@ const FormHealthCheck = ({ handleAddEntry, setNotification }: Props) => {
   );
 };
 
-export default FormHealthCheck;
+export default FormOccupational;

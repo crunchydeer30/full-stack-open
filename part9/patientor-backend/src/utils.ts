@@ -52,17 +52,17 @@ export const toNewEntry = (object: unknown): NewEntry => {
     'description' in object &&
     'date' in object &&
     'specialist' in object &&
-    'diagnosisCodes' in object &&
     'type' in object
   ) {
-    const baseEntry: NewBaseEntry = {
+    let baseEntry: NewBaseEntry = {
       description: parseDescription(object.description),
-      date: parseDate(object.date),
-      specialist: parseSpecialist(object.specialist),
-      diagnosisCodes: parseDiagnosisCodes(object.diagnosisCodes),
-      type: parseEntryType(object.type),
+        date: parseDate(object.date),
+        specialist: parseSpecialist(object.specialist),
+        type: parseEntryType(object.type)
     };
-
+    if ('diagnosisCodes' in object) {
+      baseEntry = {...baseEntry, diagnosisCodes: parseDiagnosisCodes(object.diagnosisCodes)};
+    } 
     switch (baseEntry.type) {
       case EntryType.HealthCheckEntry:
         if ('healthCheckRating' in object) {
@@ -80,6 +80,13 @@ export const toNewEntry = (object: unknown): NewEntry => {
             type: EntryType.OccupationalHealthcare,
             employerName: parseEmployerName(object.employerName),
             sickLeave: parseSickLeaves(object.sickLeave),
+          };
+        }
+        else if ('employerName' in object) {
+          return {
+            ...baseEntry,
+            type: EntryType.OccupationalHealthcare,
+            employerName: parseEmployerName(object.employerName),
           };
         }
         break;

@@ -1,7 +1,11 @@
-import { HealthCheckEntry as Entry, HealthCheckRating as Rating } from '../../types';
+import {
+  HealthCheckEntry as Entry,
+  HealthCheckRating as Rating,
+} from '../../types';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { assertNever } from '../../utils';
+import DiagnosisInfo from './DiagnosisInfo';
 
 interface Props {
   entry: Entry;
@@ -22,7 +26,7 @@ const pickIconColor = (entry: Entry): string => {
   }
 };
 
-const HealthCheckEntry = ({ entry }: Props) => {
+const EntryHealthCheck = ({ entry }: Props) => {
   const iconStyle = {
     fill: pickIconColor(entry),
   };
@@ -35,8 +39,15 @@ const HealthCheckEntry = ({ entry }: Props) => {
       <p>{entry.description}</p>
       <FavoriteIcon style={iconStyle} />
       <p>Diagnose by: {entry.specialist}</p>
+      {entry.diagnosisCodes && (
+        <ul>
+          {entry.diagnosisCodes.map((code) => (
+            <DiagnosisInfo code={code} key={code} />
+          ))}
+        </ul>
+      )}
     </article>
   );
 };
 
-export default HealthCheckEntry;
+export default EntryHealthCheck;

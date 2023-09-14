@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { EntryType, HealthCheckRating, NewEntry } from '../../types';
-import { Button, MenuItem, Select, TextField } from '@mui/material';
+import { EntryType, NewEntry } from '../../types';
+import { Button, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
@@ -11,27 +11,26 @@ interface Props {
   setNotification: (notificationMessage: string) => void;
 }
 
-const FormHealthCheck = ({ handleAddEntry, setNotification }: Props) => {
+const FormHospital = ({ handleAddEntry, setNotification }: Props) => {
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [specialist, setSpecialist] = useState('');
-  const [healthCheckRating, sethHealthCheckRating] =
-    useState<HealthCheckRating>(HealthCheckRating.Healthy);
   const [diagnosisCode, setDiagnosisCode] = useState('');
   const [diagnosisCodes, setDiagnosisCodes] = useState<Array<string>>([]);
-
-
+  const [dischargeCriteria, setDischargeCriteria] = useState('');
+  const [dischargeDate, setDischargeDate] = useState('');
 
   const handleSubmit = (event: React.SyntheticEvent) => {
     event.preventDefault();
-    const newEntry = {
+    let newEntry: NewEntry = {
       description,
       date: date.toString(),
       specialist,
-      healthCheckRating,
       diagnosisCodes: diagnosisCodes,
-      type: EntryType.HealthCheckEntry as EntryType.HealthCheckEntry,
+      discharge: {criteria: dischargeCriteria, date: dischargeDate},
+      type: EntryType.Hospital as EntryType.Hospital,
     };
+
     handleAddEntry(newEntry);
     setDescription('');
     setDate('');
@@ -68,27 +67,33 @@ const FormHealthCheck = ({ handleAddEntry, setNotification }: Props) => {
           value={specialist}
           onChange={(e) => setSpecialist(e.target.value)}
         />
-        <Select
-          label='Health Rating'
-          fullWidth
-          value={healthCheckRating}
-          onChange={(e) => sethHealthCheckRating(+e.target.value)}
-        >
-          <MenuItem value={HealthCheckRating.Healthy}>Healthy</MenuItem>
-          <MenuItem value={HealthCheckRating.LowRisk}>Low Risk</MenuItem>
-          <MenuItem value={HealthCheckRating.HighRisk}>High Risk</MenuItem>
-          <MenuItem value={HealthCheckRating.CriticalRisk}>
-            Critical Risk
-          </MenuItem>
-        </Select>
+
+        <div>
+          <p>Discharge: </p>
+          <TextField
+            label='Criteria'
+            required
+            fullWidth
+            value={dischargeCriteria}
+            onChange={(e) => setDischargeCriteria(e.target.value)}
+          />
+          <DatePicker
+            value={dischargeDate}
+            onChange={(newValue) => setDischargeDate(newValue as string)}
+          />
+        </div>
+
         <TextField
-          required
           label='Diagonsis code'
           fullWidth
           value={diagnosisCode}
           onChange={(e) => setDiagnosisCode(e.target.value)}
         />
-        <Button variant='contained' onClick={addDiagnosisCode} disabled={!diagnosisCode}>
+        <Button
+          variant='contained'
+          onClick={addDiagnosisCode}
+          disabled={!diagnosisCode}
+        >
           Add diagnosis
         </Button>
         <section>
@@ -100,6 +105,7 @@ const FormHealthCheck = ({ handleAddEntry, setNotification }: Props) => {
             />
           ))}
         </section>
+
         <p>Date</p>
         <DatePicker
           value={date}
@@ -115,4 +121,4 @@ const FormHealthCheck = ({ handleAddEntry, setNotification }: Props) => {
   );
 };
 
-export default FormHealthCheck;
+export default FormHospital;
