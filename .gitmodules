@@ -4,3 +4,9 @@
 [submodule "part12/full-stack-open-containers"]
 	path = part12/full-stack-open-containers
 	url = https://github.com/crunchydeer30/full-stack-open-containers
+[submodule "part12 - containers"]
+	path = part12 - containers
+	url = git@github.com:crunchydeer30/full-stack-open-containers.git
+[submodule "part11 - ci cd"]
+	path = part11 - ci cd
+	url = git@github.com:crunchydeer30/full-stack-open-pokedex.git
